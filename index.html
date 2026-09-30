@@ -1,0 +1,2427 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Montage 360</title>
+<script>try{var t=localStorage.getItem('m360-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme: light;
+  --brand-terracotta:#994A31; --brand-champagne:#785C2B;
+  --brand-fill:#F4B49E;       --brand-on-fill:#2A1710;
+  --s-page:#F7F2EC;  --s-sunken:#EFE7DD; --s-card:#FDFBF8;
+  --s-raised:#FFFFFF;--s-hover:#E7DACE;  --s-selected:#F3E2D6;
+  --border:rgba(25,20,17,.14); --divider:rgba(25,20,17,.08);
+  --fg-rgb:25,20,17;
+  --t-1:rgba(var(--fg-rgb),.84); --t-2:rgba(var(--fg-rgb),.74);
+  --t-3:rgba(var(--fg-rgb),.64); --t-4:rgba(var(--fg-rgb),.52);
+  --st-good:#1E6B3A; --st-warning:#7A5606; --st-critical:#A31B21; --st-neutral:#4A5A6B;
+  --st-a:10%;
+  --sh-1:0 1px 2px rgba(25,20,17,.06); --sh-2:0 4px 12px rgba(25,20,17,.08); --sh-3:0 12px 32px rgba(25,20,17,.12);
+  --focus:rgba(153,74,49,.4);
+
+  --ff-display:"Jost","Helvetica Neue",Arial,sans-serif;
+  --ff-ui:"Jost","Helvetica Neue",Arial,sans-serif;
+  --fs-display:40px; --fs-hero:32px; --fs-h1:20px; --fs-h2:16px;
+  --fs-body:14px; --fs-sm:13px; --fs-xs:12px; --fs-caps:11px;
+  --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:24px; --sp-6:32px; --sp-7:40px; --sp-8:48px; --sp-9:64px;
+  --r-sm:3px; --r-md:6px; --r-lg:10px; --r-pill:999px;
+  --e:cubic-bezier(.16,1,.3,1); --d-fast:120ms; --d-mid:160ms; --d-slow:240ms;
+  --stage:#0A0908;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --brand-terracotta:#F4B49E; --brand-champagne:#E6C89B;
+    --s-page:#0A0908;  --s-sunken:#050404; --s-card:#141110;
+    --s-raised:#1D1917;--s-hover:#221D1A;  --s-selected:#2A211C;
+    --border:rgba(247,242,237,.16); --divider:rgba(247,242,237,.09);
+    --fg-rgb:247,242,237;
+    --t-1:rgba(var(--fg-rgb),.74); --t-2:rgba(var(--fg-rgb),.62);
+    --t-3:rgba(var(--fg-rgb),.50); --t-4:rgba(var(--fg-rgb),.38);
+    --st-good:#5FB074; --st-warning:#D2A63C; --st-critical:#E5726E; --st-neutral:#A9B6C2;
+    --st-a:16%;
+    --sh-1:0 1px 2px rgba(0,0,0,.3); --sh-2:0 4px 12px rgba(0,0,0,.35); --sh-3:0 12px 32px rgba(0,0,0,.5);
+    --focus:rgba(244,180,158,.4);
+  }
+}
+:root[data-theme="dark"]{
+    color-scheme: dark;
+    --brand-terracotta:#F4B49E; --brand-champagne:#E6C89B;
+    --s-page:#0A0908;  --s-sunken:#050404; --s-card:#141110;
+    --s-raised:#1D1917;--s-hover:#221D1A;  --s-selected:#2A211C;
+    --border:rgba(247,242,237,.16); --divider:rgba(247,242,237,.09);
+    --fg-rgb:247,242,237;
+    --t-1:rgba(var(--fg-rgb),.74); --t-2:rgba(var(--fg-rgb),.62);
+    --t-3:rgba(var(--fg-rgb),.50); --t-4:rgba(var(--fg-rgb),.38);
+    --st-good:#5FB074; --st-warning:#D2A63C; --st-critical:#E5726E; --st-neutral:#A9B6C2;
+    --st-a:16%;
+    --sh-1:0 1px 2px rgba(0,0,0,.3); --sh-2:0 4px 12px rgba(0,0,0,.35); --sh-3:0 12px 32px rgba(0,0,0,.5);
+    --focus:rgba(244,180,158,.4);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px);background:var(--s-page)}
+body{height:100%;margin:0;background:var(--s-page);color:var(--t-1);font-family:var(--ff-ui);font-size:var(--fs-body);line-height:1.55;font-weight:300;
+  overflow:hidden;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:inherit}
+b,strong{font-weight:500}
+:focus-visible{outline:2px solid var(--focus);outline-offset:1px}
+[hidden]{display:none!important}
+.spacer{flex:1}
+.num,table,.stat-value,.metric{font-variant-numeric:tabular-nums}
+.caps{font-size:var(--fs-caps);line-height:1.4;letter-spacing:.14em;text-transform:uppercase;font-weight:400;color:var(--t-3)}
+
+/* ---------- Buttons ---------- */
+.btn{height:36px;border:1px solid var(--border);background:transparent;color:var(--t-1);border-radius:var(--r-md);padding:0 var(--sp-4);font-weight:400;
+  cursor:pointer;font-size:var(--fs-body);display:inline-flex;align-items:center;justify-content:center;gap:var(--sp-2);text-decoration:none;white-space:nowrap;
+  transition:background var(--d-fast) var(--e),border-color var(--d-fast) var(--e),color var(--d-fast) var(--e)}
+.btn:hover{background:var(--s-hover)}
+.btn:disabled{opacity:.5;cursor:default;background:transparent}
+.btn.block{width:100%}
+.btn.sm{height:30px;padding:0 var(--sp-3);font-size:var(--fs-sm)}
+.btn.primary{background:var(--brand-fill);color:var(--brand-on-fill);border-color:var(--brand-fill)}
+.btn.primary:hover{background:#EFA78E;border-color:#EFA78E}
+.btn.primary.on{background:var(--s-raised);color:var(--t-1);border-color:var(--border)}
+.btn.ghost{border-color:transparent;color:var(--t-2)}
+.btn.ghost:hover{background:var(--s-hover);color:var(--t-1)}
+.btn.danger{border-color:transparent;color:var(--st-critical)}
+.btn.danger:hover{background:color-mix(in srgb,var(--st-critical) var(--st-a),transparent)}
+.btn.danger.armed{background:var(--st-critical);color:#fff;border-color:var(--st-critical)}
+:root[data-theme="dark"] .btn.danger.armed{color:#0A0908}
+.btn.glass{background:rgba(10,9,8,.42);border-color:rgba(247,242,237,.18);color:#F7F2ED;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.btn.glass:hover{background:rgba(10,9,8,.62)}
+.btn svg{width:16px;height:16px;flex:none}
+.icon-btn{width:36px;height:36px;border-radius:var(--r-md);border:1px solid rgba(247,242,237,.18);background:rgba(10,9,8,.42);color:#F7F2ED;display:grid;place-items:center;cursor:pointer;
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);flex:none;text-decoration:none;transition:background var(--d-fast) var(--e)}
+.icon-btn:hover{background:rgba(10,9,8,.62)}
+.icon-btn svg{width:18px;height:18px}
+
+/* ---------- Fields ---------- */
+.field{display:flex;flex-direction:column;gap:6px;font-size:var(--fs-sm);color:var(--t-2);font-weight:300;min-width:0}
+.input,.field input:not([type=checkbox]),.field select,.field textarea,.sel{height:36px;border:1px solid var(--border);border-radius:var(--r-sm);padding:0 var(--sp-3);
+  background:var(--s-card);color:var(--t-1);font-size:var(--fs-body);width:100%;font-weight:300;transition:border-color var(--d-fast) var(--e)}
+.field textarea{height:auto;min-height:88px;padding:var(--sp-2) var(--sp-3);resize:vertical;line-height:1.5}
+.field input::placeholder,.field textarea::placeholder,.tagin input::placeholder{color:var(--t-3)}
+select.sel,.field select,select.input{-webkit-appearance:none;appearance:none;padding-right:38px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238a817a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;background-size:14px 14px;cursor:pointer}
+.urow select.input{padding-right:30px;background-position:right 8px center}
+.field input:focus,.field select:focus,.field textarea:focus,.input:focus,.sel:focus{outline:2px solid var(--focus);outline-offset:1px;border-color:var(--brand-terracotta)}
+.badge{display:inline-flex;align-items:center;gap:4px;height:22px;background:var(--s-sunken);color:var(--t-2);font-weight:400;font-size:var(--fs-xs);padding:0 var(--sp-2);
+  border-radius:var(--r-sm);white-space:nowrap}
+.badge.accent{background:var(--s-selected);color:var(--brand-terracotta)}
+.badge.fill{background:var(--brand-fill);color:var(--brand-on-fill)}
+.chiprow{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.tchip{height:30px;border:1px solid var(--border);background:transparent;border-radius:var(--r-pill);padding:0 var(--sp-3);font-size:var(--fs-sm);font-weight:300;cursor:pointer;color:var(--t-2);
+  display:inline-flex;align-items:center;gap:6px;transition:background var(--d-fast) var(--e),color var(--d-fast) var(--e)}
+.tchip:hover{background:var(--s-hover);color:var(--t-1)}
+.tchip[aria-pressed="true"]{background:var(--brand-fill);border-color:var(--brand-fill);color:var(--brand-on-fill);font-weight:400}
+.tchip .n{font-variant-numeric:tabular-nums;opacity:.8}
+.tagin{display:flex;flex-wrap:wrap;gap:6px;align-items:center;border:1px solid var(--border);border-radius:var(--r-sm);padding:4px 6px;background:var(--s-card);min-height:36px;cursor:text}
+.tagin:focus-within{outline:2px solid var(--focus);outline-offset:1px;border-color:var(--brand-terracotta)}
+.tagin .tg{display:inline-flex;align-items:center;gap:2px;background:var(--s-sunken);color:var(--t-1);border-radius:var(--r-sm);height:24px;padding:0 2px 0 8px;font-size:var(--fs-sm)}
+.tagin .tg button{border:0;background:transparent;color:var(--t-3);cursor:pointer;width:20px;height:20px;border-radius:var(--r-sm);line-height:1;font-size:15px}
+.tagin .tg button:hover{background:var(--s-hover);color:var(--t-1)}
+.tagin input{border:0!important;background:transparent!important;padding:0 4px!important;height:26px!important;flex:1;min-width:110px;font-size:var(--fs-sm)!important;outline:none!important}
+.seg{display:inline-flex;border:1px solid var(--border);border-radius:var(--r-md);padding:2px;gap:2px;background:var(--s-card)}
+.seg button{border:0;background:transparent;border-radius:4px;height:30px;min-width:30px;padding:0 var(--sp-2);font-size:var(--fs-sm);cursor:pointer;color:var(--t-2);display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.seg button:hover{color:var(--t-1)}
+.seg button[aria-pressed="true"]{background:var(--s-selected);color:var(--t-1)}
+.seg svg{width:16px;height:16px}
+
+/* ---------- Dashboard layout ---------- */
+.page{height:100%}
+#dash{display:grid;grid-template-columns:248px minmax(0,1fr)}
+.dnav{background:var(--s-card);border-right:1px solid var(--border);display:flex;flex-direction:column;min-height:0;padding:var(--sp-5) var(--sp-4) var(--sp-4)}
+.brand{display:flex;align-items:center;gap:var(--sp-3);text-decoration:none;padding:0 var(--sp-2);margin-bottom:var(--sp-6);min-width:0}
+.brand img{height:36px;width:auto;max-width:180px;object-fit:contain;display:block}
+.brand-name{font-family:var(--ff-ui);font-weight:400;font-size:18px;line-height:1;letter-spacing:.28em;text-transform:uppercase;color:var(--t-1)}
+.brand-sub{margin-top:4px}
+.nav-h{padding:0 var(--sp-2);margin:0 0 var(--sp-2)}
+.nav{list-style:none;margin:0 0 var(--sp-5);padding:0;display:flex;flex-direction:column;gap:2px}
+.nav a,.nav button{display:flex;align-items:center;gap:var(--sp-3);height:36px;padding:0 var(--sp-3) 0 calc(var(--sp-3) - 2px);border-left:2px solid transparent;border-radius:0 var(--r-md) var(--r-md) 0;
+  color:var(--t-2);text-decoration:none;font-size:var(--fs-body);font-weight:300;width:100%;background:transparent;border-top:0;border-right:0;border-bottom:0;cursor:pointer;text-align:left;
+  transition:background var(--d-fast) var(--e),color var(--d-fast) var(--e)}
+.nav a:hover,.nav button:hover{background:var(--s-hover);color:var(--t-1)}
+.nav a[aria-current="page"]{background:var(--s-selected);border-left-color:var(--brand-terracotta);color:var(--t-1);font-weight:400}
+.nav svg{width:17px;height:17px;flex:none;opacity:.85}
+.lbl-short{display:none}
+.nav .n{margin-left:auto;font-size:var(--fs-xs);color:var(--t-3);font-variant-numeric:tabular-nums}
+.recent{overflow-y:auto;min-height:0;flex:1;margin:0 calc(var(--sp-2) * -1) var(--sp-4);padding:0 var(--sp-2)}
+.recent a{display:grid;grid-template-columns:44px 1fr;gap:var(--sp-3);align-items:center;padding:6px var(--sp-2);border-radius:var(--r-md);text-decoration:none;color:var(--t-2);font-size:var(--fs-sm)}
+.recent a:hover{background:var(--s-hover);color:var(--t-1)}
+.recent img,.recent .ph{width:44px;height:22px;object-fit:cover;border-radius:var(--r-sm);background:var(--s-sunken);display:block}
+.recent span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dnav-foot{border-top:1px solid var(--divider);padding-top:var(--sp-4);display:flex;flex-direction:column;gap:var(--sp-3)}
+.theme-row{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-2);padding:0 var(--sp-2)}
+.theme-row .seg button{padding:0 6px}
+
+.dmain{overflow-y:auto;min-width:0}
+.dmain-in{max-width:1280px;margin:0 auto;padding:var(--sp-6) var(--sp-6) var(--sp-9)}
+.phead{display:flex;align-items:flex-end;gap:var(--sp-4);margin-bottom:var(--sp-6);flex-wrap:wrap}
+.phead h1{font-family:var(--ff-display);font-weight:300;font-size:36px;line-height:1.15;margin:0;color:var(--t-1);letter-spacing:-.015em}
+.phead h1 em{color:var(--brand-terracotta);font-style:normal;font-weight:400}
+.phead p{margin:var(--sp-2) 0 0;color:var(--t-2);font-size:var(--fs-body);max-width:62ch}
+.phead .actions{margin-left:auto;display:flex;gap:var(--sp-2)}
+
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--sp-4);margin-bottom:var(--sp-5)}
+.stat{background:var(--s-card);border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--sp-4) var(--sp-5) var(--sp-4)}
+.stat-value{font-family:var(--ff-display);font-weight:300;font-size:30px;letter-spacing:-.01em;line-height:1.2;color:var(--brand-champagne);margin:var(--sp-2) 0 var(--sp-1)}
+.stat-value small{font-family:var(--ff-ui);font-size:var(--fs-sm);color:var(--t-3);margin-left:6px;font-weight:300}
+.delta{font-size:var(--fs-sm);display:flex;align-items:center;gap:6px;color:var(--t-2)}
+.delta svg{width:14px;height:14px;flex:none}
+.delta.good svg{color:var(--st-good)}
+.delta.neutral svg{color:var(--st-neutral)}
+
+.card{background:var(--s-card);border:1px solid var(--border);border-radius:var(--r-lg)}
+.cont{display:grid;grid-template-columns:200px minmax(0,1fr) auto;gap:var(--sp-5);align-items:center;padding:var(--sp-4);margin-bottom:var(--sp-6)}
+.cont img,.cont .ph{width:200px;aspect-ratio:2/1;object-fit:cover;border-radius:var(--r-md);display:block;background:var(--s-sunken)}
+.cont h2{margin:var(--sp-1) 0 var(--sp-2);font-size:var(--fs-h1);font-weight:400;line-height:1.3}
+.cont .chiprow{gap:4px}
+.cont .acts{display:flex;gap:var(--sp-2)}
+
+.toolbar{display:flex;gap:var(--sp-2);align-items:center;flex-wrap:wrap;position:sticky;top:0;z-index:3;background:var(--s-page);padding:var(--sp-3) 0;margin:0 0 var(--sp-2)}
+.search{position:relative;flex:1;min-width:220px}
+.search svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--t-3);pointer-events:none}
+.search input{padding-left:34px!important}
+.toolbar .sel{width:auto;min-width:170px}
+.filters{display:flex;flex-direction:column;gap:var(--sp-2);margin-bottom:var(--sp-5)}
+.filters .chiprow .caps{margin-right:var(--sp-2);min-width:44px}
+.sec-h{display:flex;align-items:baseline;gap:var(--sp-3);margin:var(--sp-5) 0 var(--sp-3)}
+.sec-h h2{font-size:var(--fs-h1);margin:0;font-weight:400;line-height:1.3}
+.sec-h small{color:var(--t-3);font-size:var(--fs-sm);font-variant-numeric:tabular-nums}
+
+.tour-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(272px,1fr));gap:var(--sp-4)}
+.tcard{background:var(--s-card);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;display:flex;flex-direction:column;transition:border-color var(--d-fast) var(--e)}
+.tcard:hover{border-color:rgba(var(--fg-rgb),.28)}
+.tcover{position:relative;border:0;padding:0;background:var(--s-sunken);cursor:pointer;aspect-ratio:2/1;display:block;width:100%}
+.tcover img{width:100%;height:100%;object-fit:cover;display:block}
+.tcover .ph{position:absolute;inset:0;display:grid;place-items:center;color:var(--t-3);font-size:var(--fs-sm)}
+.tbody{padding:var(--sp-4);display:flex;flex-direction:column;gap:var(--sp-2);flex:1}
+.tbody h3{margin:0;font-size:var(--fs-h2);font-weight:400;line-height:1.4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tmeta{display:flex;gap:var(--sp-4);font-size:var(--fs-sm);color:var(--t-2);flex-wrap:wrap}
+.tmeta b{font-weight:400;color:var(--brand-champagne);font-variant-numeric:tabular-nums}
+.tsub{font-size:var(--fs-sm);color:var(--t-3)}
+.tactions{display:flex;gap:var(--sp-2);margin-top:auto;padding-top:var(--sp-2)}
+.tactions .btn{flex:1}
+
+.tablewrap{background:var(--s-card);border:1px solid var(--border);border-radius:var(--r-lg);overflow:auto}
+table.dt{width:100%;border-collapse:collapse;min-width:820px}
+.dt th{position:sticky;top:0;background:var(--s-sunken);text-align:left;font-size:var(--fs-caps);letter-spacing:.14em;text-transform:uppercase;font-weight:400;color:var(--t-3);
+  height:36px;padding:0 var(--sp-4);border-bottom:1px solid var(--divider);white-space:nowrap}
+.dt td{height:48px;padding:0 var(--sp-4);border-bottom:1px solid var(--divider);color:var(--t-1);white-space:nowrap}
+.dt tr:last-child td{border-bottom:0}
+.dt tbody tr{cursor:pointer;transition:background var(--d-fast) var(--e)}
+.dt tbody tr:hover{background:var(--s-hover)}
+.dt .r{text-align:right}
+.dt .t2{color:var(--t-2)}
+.dt .cur{color:var(--brand-champagne);font-weight:400}
+.dt .tn{display:flex;align-items:center;gap:var(--sp-3);max-width:320px}
+.dt .tn img,.dt .tn .ph{width:56px;height:28px;border-radius:var(--r-sm);object-fit:cover;background:var(--s-sunken);flex:none}
+.dt .tn span{overflow:hidden;text-overflow:ellipsis}
+.dt .acts{display:flex;gap:4px;justify-content:flex-end}
+
+.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:var(--sp-3)}
+.pcard{border:1px solid var(--border);background:var(--s-card);border-radius:var(--r-lg);overflow:hidden;cursor:pointer;padding:0;text-align:left;transition:border-color var(--d-fast) var(--e)}
+.pcard:hover{border-color:var(--brand-terracotta)}
+.pcard img{width:100%;aspect-ratio:2/1;object-fit:cover;display:block;background:var(--s-sunken)}
+.pcard div{padding:var(--sp-2) var(--sp-3) var(--sp-3)}
+.pcard b{display:block;font-size:var(--fs-body);font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pcard span{font-size:var(--fs-xs);color:var(--t-3);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pcard span.t2{color:var(--t-2);font-size:var(--fs-sm)}
+.nores{color:var(--t-2);padding:var(--sp-7) var(--sp-4);text-align:center;grid-column:1/-1;border:1px dashed var(--border);border-radius:var(--r-lg)}
+.nores .btn{margin-top:var(--sp-3)}
+.empty-dash{text-align:center;padding:var(--sp-9) var(--sp-5)}
+.empty-dash h2{font-family:var(--ff-display);font-weight:300;font-size:28px;letter-spacing:-.01em;line-height:1.15;margin:0 0 var(--sp-2)}
+.empty-dash p{color:var(--t-2);margin:0 auto var(--sp-5);max-width:48ch}
+
+/* ---------- Modals ---------- */
+.modal{position:fixed;inset:0;z-index:50;background:rgba(10,9,8,.5);display:grid;place-items:center;padding:var(--sp-4);overflow-y:auto}
+.modal-box{background:var(--s-raised);border:1px solid var(--border);border-radius:var(--r-lg);width:min(560px,100%);padding:var(--sp-5);display:flex;flex-direction:column;gap:var(--sp-4);
+  box-shadow:var(--sh-3);max-height:calc(100% - 8px);overflow-y:auto}
+.modal-box h2{margin:0;font-size:var(--fs-h1);font-weight:400}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-3)}
+.modal-actions{display:flex;gap:var(--sp-2);align-items:center;margin-top:var(--sp-1);flex-wrap:wrap}
+.logo-row{display:flex;align-items:center;gap:var(--sp-3)}
+.logo-prev{height:52px;min-width:52px;border:1px dashed var(--border);border-radius:var(--r-md);display:grid;place-items:center;padding:6px;color:var(--t-3);font-size:var(--fs-xs);background:var(--s-sunken)}
+.logo-prev img{height:40px;width:auto;max-width:180px;display:block}
+.note{font-size:var(--fs-sm);color:var(--t-3);margin:0}
+
+/* ---------- Stage (builder + viewer) ---------- */
+.stage{display:grid;grid-template-columns:340px minmax(0,1fr)}
+.stage.view{grid-template-columns:0 minmax(0,1fr)}
+aside#side{background:var(--s-card);border-right:1px solid var(--border);display:flex;flex-direction:column;min-height:0;overflow:hidden}
+.stage.view aside#side{visibility:hidden;border:0}
+.side-head{padding:var(--sp-4) var(--sp-5) var(--sp-4);display:flex;flex-direction:column;gap:var(--sp-2);border-bottom:1px solid var(--divider)}
+.back{display:inline-flex;align-items:center;gap:6px;color:var(--t-2);text-decoration:none;font-size:var(--fs-sm);width:max-content}
+.back:hover{color:var(--t-1)}
+.side-title{font-size:var(--fs-h1);font-weight:400;line-height:1.3;word-break:break-word}
+.side-head .chiprow{gap:4px}
+.tabs{display:flex;padding:0 var(--sp-4);border-bottom:1px solid var(--divider)}
+.tabs button{border:0;background:transparent;height:44px;padding:0 var(--sp-2);margin-right:var(--sp-3);font-weight:300;color:var(--t-2);cursor:pointer;border-bottom:2px solid transparent;font-size:var(--fs-body)}
+.tabs button[aria-selected="true"]{color:var(--t-1);border-bottom-color:var(--brand-terracotta);font-weight:400}
+.tabs button:disabled{opacity:.5;cursor:default}
+.side-body{flex:1;min-height:0;overflow-y:auto;padding:var(--sp-4) var(--sp-5) var(--sp-5);display:flex;flex-direction:column;gap:var(--sp-4)}
+.side-foot{border-top:1px solid var(--divider);padding:var(--sp-3) var(--sp-5);font-size:var(--fs-xs);color:var(--t-3);display:flex;align-items:center;gap:var(--sp-3)}
+.side-foot span{flex:1;min-width:0}
+.upload{display:flex;flex-direction:column;gap:var(--sp-3);background:var(--s-sunken);border-radius:var(--r-lg);padding:var(--sp-4)}
+.group{display:flex;flex-direction:column;gap:2px}
+.group-h{display:flex;align-items:center;gap:var(--sp-2);margin-bottom:2px}
+.gname{flex:1;min-width:0;height:30px;border:1px solid transparent;background:transparent;border-radius:var(--r-sm);padding:0 6px;margin-left:-6px;
+  font-size:var(--fs-caps);letter-spacing:.14em;text-transform:uppercase;font-weight:400;color:var(--t-2)}
+.gname:hover{border-color:var(--border)}
+.gname:focus{outline:2px solid var(--focus);outline-offset:1px;background:var(--s-card);text-transform:none;letter-spacing:0;font-size:var(--fs-body)}
+.group-h small{color:var(--t-3);font-size:var(--fs-xs);white-space:nowrap;font-variant-numeric:tabular-nums}
+.scene-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.scene{width:100%;display:grid;grid-template-columns:80px 1fr;gap:var(--sp-3);align-items:center;text-align:left;
+  background:transparent;border:0;border-left:2px solid transparent;border-radius:0 var(--r-md) var(--r-md) 0;padding:6px var(--sp-2) 6px 6px;cursor:pointer;transition:background var(--d-fast) var(--e)}
+.scene:hover{background:var(--s-hover)}
+.scene.active{background:var(--s-selected);border-left-color:var(--brand-terracotta)}
+.scene img{width:80px;height:40px;object-fit:cover;border-radius:var(--r-sm);display:block;background:var(--s-sunken)}
+.scene-name{font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:var(--fs-body)}
+.scene-sub{font-size:var(--fs-xs);color:var(--t-3);display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-variant-numeric:tabular-nums}
+.scene-sub .badge{height:18px;font-size:11px;padding:0 6px}
+.list-empty{color:var(--t-2);font-size:var(--fs-sm);padding:var(--sp-1) 2px}
+.details{font-size:var(--fs-sm);color:var(--t-2);margin:0;line-height:1.6;background:var(--s-sunken);border-radius:var(--r-md);padding:var(--sp-3)}
+.details b{color:var(--brand-champagne);font-weight:400;font-variant-numeric:tabular-nums}
+.btnrow{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-2)}
+
+.viewer{position:relative;background:var(--stage);min-width:0;min-height:0;overflow:hidden;user-select:none;-webkit-user-select:none}
+#gl{position:absolute;inset:0;cursor:grab;touch-action:none}
+#gl.grabbing{cursor:grabbing}
+.viewer.placing #gl{cursor:crosshair}
+#gl canvas{display:block;width:100%;height:100%}
+#hotspots{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+
+/* Hotspots (over photography, so fixed colours) */
+.hs{--k:1;--c:#fff;--ic:#14161b;position:absolute;left:0;top:0;width:0;height:0;pointer-events:none;will-change:transform}
+.hs.sz-s{--k:.75}.hs.sz-l{--k:1.3}
+.hs-hit{position:absolute;left:calc(-34px * var(--k));top:calc(-34px * var(--k));width:calc(68px * var(--k));height:calc(68px * var(--k));
+  border-radius:50%;pointer-events:auto;cursor:pointer;touch-action:none;perspective:220px}
+.hs-shape{position:absolute;inset:calc(8px * var(--k));border-radius:50%;display:grid;place-items:center;transition:transform var(--d-mid) var(--e);
+  box-shadow:0 0 0 1px rgba(0,0,0,.2),0 6px 18px rgba(0,0,0,.45)}
+.hs-shape svg{width:calc(24px * var(--k));height:calc(24px * var(--k));display:block}
+.st-floor .hs-shape{border:3px solid var(--c);background:rgba(255,255,255,.14);background:color-mix(in srgb,var(--c) 20%,transparent);transform:rotateX(52deg)}
+.st-floor .hs-shape svg{color:var(--c);filter:drop-shadow(0 1px 2px rgba(0,0,0,.5))}
+.st-floor .hs-hit:hover .hs-shape{transform:rotateX(38deg) scale(1.12)}
+.st-circle .hs-shape{border:3px solid var(--c);background:rgba(0,0,0,.18);inset:calc(12px * var(--k))}
+.st-circle .hs-shape svg{color:var(--c);width:calc(14px * var(--k));height:calc(14px * var(--k))}
+.hs.flat .hs-shape{background:var(--c);inset:calc(12px * var(--k))}
+.hs.flat .hs-shape svg{color:var(--ic);width:calc(20px * var(--k));height:calc(20px * var(--k))}
+.hs:not(.st-floor) .hs-hit:hover .hs-shape{transform:scale(1.12)}
+.hs-label{position:absolute;top:calc(30px * var(--k));left:0;transform:translateX(-50%);white-space:nowrap;pointer-events:none;
+  font-size:var(--fs-sm);font-weight:400;color:#F7F2ED;background:rgba(10,9,8,.72);padding:3px 10px;border-radius:var(--r-pill);opacity:0;transition:opacity var(--d-fast) var(--e)}
+.hs:hover .hs-label,.viewer.editing .hs-label,.hs.sel .hs-label,.hs.always .hs-label{opacity:1}
+.hs.sel .hs-hit{outline:2px dashed #F4B49E;outline-offset:2px}
+.hs.broken .hs-shape{opacity:.6}
+.viewer.editing .hs-hit{cursor:grab}
+.hs.dragging .hs-hit{cursor:grabbing}
+.hs.flr .hs-shape{display:none}
+.hs.flr .hs-hit{border-radius:50%;perspective:none}
+.hs.flr.sel .hs-hit{outline:none;border:2px dashed #F4B49E}
+.hs.flr .hs-label{top:30px}
+
+.fade{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none;transition:opacity 220ms var(--e)}
+.fade.on{opacity:1}
+.topbar{position:absolute;z-index:5;top:0;left:0;right:0;display:flex;align-items:center;gap:var(--sp-2);padding:var(--sp-3) var(--sp-4) var(--sp-7);
+  pointer-events:none;background:linear-gradient(rgba(10,9,8,.62),rgba(10,9,8,0));color:#F7F2ED}
+.topbar>*{pointer-events:auto}
+.scene-title{font-weight:400;font-size:var(--fs-h2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;text-shadow:0 1px 3px rgba(0,0,0,.5);line-height:1.3}
+.scene-title small{display:block;font-weight:300;font-size:var(--fs-xs);opacity:.8}
+#btnMenu{display:none}
+.hint{position:absolute;left:50%;top:68px;transform:translateX(-50%);background:var(--brand-fill);color:var(--brand-on-fill);font-weight:400;
+  height:36px;display:flex;align-items:center;padding:0 var(--sp-4);border-radius:var(--r-pill);font-size:var(--fs-sm);box-shadow:0 6px 20px rgba(0,0,0,.35);white-space:nowrap;max-width:calc(100% - 24px);overflow:hidden;text-overflow:ellipsis}
+
+.hs-panel{position:absolute;right:var(--sp-4);top:64px;width:320px;max-height:calc(100% - 80px);overflow-y:auto;background:var(--s-raised);border:1px solid var(--border);
+  border-radius:var(--r-lg);padding:var(--sp-4);box-shadow:var(--sh-3);display:flex;flex-direction:column;gap:var(--sp-3);color:var(--t-1);z-index:6}
+.hp-top{display:flex;align-items:center;gap:var(--sp-2)}
+.hp-top strong{font-weight:400;font-size:var(--fs-h2)}
+.x{margin-left:auto;border:0;background:transparent;color:var(--t-3);cursor:pointer;width:30px;height:30px;border-radius:var(--r-md);font-size:20px;line-height:1}
+.x:hover{background:var(--s-hover);color:var(--t-1)}
+.seg2{display:flex;background:var(--s-sunken);border-radius:var(--r-md);padding:2px;gap:2px}
+.seg2 button{flex:1;border:0;background:transparent;border-radius:4px;height:30px;font-weight:300;font-size:var(--fs-sm);cursor:pointer;color:var(--t-2)}
+.seg2 button[aria-pressed="true"]{background:var(--s-raised);color:var(--t-1);font-weight:400;box-shadow:var(--sh-1)}
+.icon-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.icon-grid button{border:1px solid var(--border);background:var(--s-card);border-radius:var(--r-md);padding:var(--sp-2) 2px 6px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:var(--fs-xs);color:var(--t-2);font-weight:300;line-height:1.2;text-align:center}
+.icon-grid button:hover{background:var(--s-hover)}
+.icon-grid button[aria-pressed="true"]{border-color:var(--brand-terracotta);color:var(--t-1);background:var(--s-selected)}
+.icon-grid .ico{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;border:2px solid var(--t-1);color:var(--t-1)}
+.icon-grid .ico.flat{background:var(--t-1);color:var(--s-card)}
+.icon-grid .ico svg{width:16px;height:16px}
+.icon-grid .ico.flr{transform:scaleY(.52);border-width:2.5px}
+.swatches{display:flex;gap:var(--sp-2);flex-wrap:wrap}
+.swatches button{width:28px;height:28px;border-radius:50%;border:1px solid var(--border);cursor:pointer;padding:0}
+.swatches button[aria-pressed="true"]{outline:2px solid var(--brand-terracotta);outline-offset:2px}
+.hp-actions{display:flex;gap:var(--sp-2)}
+.hp-actions .btn{flex:1}
+
+.info-pop{position:absolute;left:50%;bottom:24px;transform:translateX(-50%);width:min(420px,calc(100% - 24px));background:var(--s-raised);border:1px solid var(--border);color:var(--t-1);
+  border-radius:var(--r-lg);padding:var(--sp-4) var(--sp-5);box-shadow:var(--sh-3);z-index:4}
+.info-pop h3{margin:0 30px var(--sp-1) 0;font-size:var(--fs-h2);font-weight:400}
+.info-pop p{margin:0;color:var(--t-2);white-space:pre-wrap}
+.info-pop .x{position:absolute;right:10px;top:10px}
+.viewer.has-bottom .info-pop{bottom:150px}
+
+.bottom{position:absolute;left:0;right:0;bottom:0;padding:var(--sp-7) var(--sp-4) var(--sp-4);background:linear-gradient(rgba(10,9,8,0),rgba(10,9,8,.72));display:flex;flex-direction:column;gap:var(--sp-3)}
+.space-tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.space-tabs button{flex:none;height:30px;border:1px solid rgba(247,242,237,.2);background:rgba(10,9,8,.42);color:#F7F2ED;border-radius:var(--r-pill);padding:0 var(--sp-3);font-weight:300;font-size:var(--fs-sm);cursor:pointer;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.space-tabs button[aria-pressed="true"]{background:var(--brand-fill);border-color:var(--brand-fill);color:var(--brand-on-fill);font-weight:400}
+.strip{display:flex;gap:var(--sp-2);overflow-x:auto;scrollbar-width:thin}
+.chip{flex:none;border:2px solid transparent;border-radius:var(--r-md);padding:0;background:#000;cursor:pointer;position:relative;overflow:hidden;width:132px;height:70px}
+.chip img{width:100%;height:100%;object-fit:cover;display:block;opacity:.85}
+.chip span{position:absolute;left:0;right:0;bottom:0;padding:14px 8px 5px;font-size:var(--fs-xs);font-weight:400;color:#F7F2ED;text-align:left;
+  background:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.85));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chip.active{border-color:var(--brand-fill)}
+.chip:hover img{opacity:1}
+
+.pill{position:absolute;left:var(--sp-4);bottom:var(--sp-4);display:flex;align-items:center;gap:var(--sp-2);background:rgba(10,9,8,.66);color:#F7F2ED;
+  font-size:var(--fs-xs);font-weight:400;height:26px;padding:0 var(--sp-3);border-radius:var(--r-pill);pointer-events:none;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.pill svg{width:13px;height:13px}
+.pill.ok svg{color:#5FB074}
+.pill.busy svg{color:#D2A63C}
+.viewer.has-bottom .pill{bottom:146px}
+
+.empty{position:absolute;inset:0;display:grid;place-items:center;padding:var(--sp-5);color:#F7F2ED;text-align:center;background:radial-gradient(ellipse at 50% 60%,#231d19 0%,#0A0908 72%)}
+.empty-in{max-width:440px}
+.globe{width:104px;height:104px;margin:0 auto var(--sp-5);border-radius:50%;border:1.5px solid rgba(247,242,237,.55);position:relative}
+.globe i{position:absolute;inset:0;border-radius:50%;border:1.5px solid rgba(247,242,237,.28)}
+.globe i:nth-child(1){transform:scaleX(.55)}
+.globe i:nth-child(2){transform:scaleX(.15)}
+.globe i:nth-child(3){transform:scaleY(.35);border-color:#F4B49E}
+.empty h2{font-family:var(--ff-display);font-weight:300;font-size:28px;letter-spacing:-.01em;line-height:1.15;margin:0 0 var(--sp-2)}
+.empty p{margin:0 0 var(--sp-5);color:rgba(247,242,237,.7)}
+
+.loading{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:var(--sp-2);
+  background:rgba(10,9,8,.82);color:#F7F2ED;height:40px;padding:0 var(--sp-4);border-radius:var(--r-pill);font-size:var(--fs-sm)}
+.spin{width:16px;height:16px;border-radius:50%;border:2px solid rgba(247,242,237,.3);border-top-color:#F7F2ED;animation:rot .8s linear infinite;flex:none}
+.queue .spin{border-color:var(--divider);border-top-color:var(--brand-terracotta)}
+@keyframes rot{to{transform:rotate(360deg)}}
+.drop{position:absolute;inset:12px;border:2px dashed var(--brand-fill);border-radius:var(--r-lg);background:rgba(10,9,8,.72);
+  color:#F7F2ED;display:grid;place-items:center;font-size:var(--fs-h1);font-weight:300;pointer-events:none;z-index:6}
+
+/* Queue + toasts */
+.queue{position:fixed;right:var(--sp-4);bottom:calc(var(--sp-4) + env(safe-area-inset-bottom,0px));z-index:40;width:min(340px,calc(100% - 32px));background:var(--s-raised);
+  border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--sp-3) var(--sp-4);box-shadow:var(--sh-2);display:flex;flex-direction:column;gap:var(--sp-2)}
+.queue .lrow{display:flex;align-items:center;gap:var(--sp-2);font-weight:400;font-size:var(--fs-body)}
+.queue small{color:var(--t-3);font-size:var(--fs-xs)}
+.bar{width:100%;height:4px;border-radius:4px;background:var(--s-sunken);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--brand-terracotta);transition:width var(--d-slow) var(--e)}
+.toasts{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--sp-5) + env(safe-area-inset-bottom,0px));z-index:60;display:flex;flex-direction:column;gap:var(--sp-2);align-items:center;pointer-events:none;width:max-content;max-width:calc(100% - 32px)}
+.toast{background:var(--s-raised);color:var(--t-1);border:1px solid var(--border);padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);
+  font-size:var(--fs-sm);box-shadow:var(--sh-2);max-width:380px;display:flex;gap:var(--sp-2);align-items:flex-start}
+.toast svg{width:16px;height:16px;flex:none;margin-top:2px}
+.toast.good svg{color:var(--st-good)}
+.toast.warn svg{color:var(--st-warning)}
+.toast.err svg{color:var(--st-critical)}
+.toast b{font-weight:500;margin-right:4px}
+.scrim{display:none}
+
+
+/* Users */
+.avatar{width:32px;height:32px;border-radius:var(--r-pill);background:var(--s-selected);color:var(--brand-terracotta);display:grid;place-items:center;font-size:var(--fs-xs);font-weight:500;letter-spacing:.04em;flex:none}
+.uchip{display:flex;align-items:center;gap:var(--sp-3);width:100%;border:1px solid var(--border);background:transparent;border-radius:var(--r-md);padding:6px var(--sp-2);cursor:pointer;text-align:left;
+  transition:background var(--d-fast) var(--e)}
+.uchip:hover{background:var(--s-hover)}
+.uchip b{display:block;font-weight:400;font-size:var(--fs-body);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--t-1)}
+.uchip .who{min-width:0;flex:1}
+.uchip svg{width:16px;height:16px;color:var(--t-3);flex:none}
+.login{position:fixed;inset:0;z-index:70;background:var(--s-page);display:grid;place-items:center;padding:var(--sp-5);overflow-y:auto}
+.login-box{width:min(520px,100%);display:flex;flex-direction:column;gap:var(--sp-5)}
+.login-brand img{height:40px;width:auto;max-width:200px;display:block}
+.login h1{font-weight:300;font-size:32px;letter-spacing:-.015em;line-height:1.15;margin:0}
+.user-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:var(--sp-2)}
+.utile{display:flex;align-items:center;gap:var(--sp-3);border:1px solid var(--border);background:var(--s-card);border-radius:var(--r-lg);padding:var(--sp-3) var(--sp-4);cursor:pointer;text-align:left;
+  transition:background var(--d-fast) var(--e),border-color var(--d-fast) var(--e)}
+.utile:hover{background:var(--s-hover)}
+.utile.static{cursor:default}
+.utile.static:hover{background:var(--s-card)}
+.utile .avatar{width:40px;height:40px;font-size:var(--fs-sm)}
+.utile b{display:block;font-weight:400;font-size:var(--fs-h2)}
+.utile .who{flex:1;min-width:0}
+.utile svg{width:16px;height:16px;color:var(--t-3)}
+.pin-area{display:flex;flex-direction:column;gap:var(--sp-4)}
+.err{display:flex;gap:var(--sp-2);align-items:center;color:var(--st-critical);font-size:var(--fs-sm)}
+.err svg{width:16px;height:16px;flex:none}
+.login-note{margin-top:calc(var(--sp-2) * -1)}
+.ulist{display:flex;flex-direction:column;gap:var(--sp-2)}
+.urow{display:grid;grid-template-columns:32px minmax(0,1fr) 112px 104px 30px;gap:var(--sp-2);align-items:center}
+.urow .input{height:34px;padding:0 var(--sp-2)}
+.urow .you{font-size:var(--fs-xs);color:var(--t-3)}
+.urow .btn{padding:0;width:30px}
+@media (max-width:560px){ .urow{grid-template-columns:32px minmax(0,1fr) 30px} .urow select,.urow input[data-f=pin]{grid-column:2} }
+@media (max-width:1100px){ .cont{grid-template-columns:140px minmax(0,1fr)} .cont img,.cont .ph{width:140px} .cont .acts{grid-column:1/-1} }
+@media (max-width:900px){
+  #dash{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr)}
+  .dnav{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:var(--sp-2) var(--sp-3);padding:var(--sp-3) var(--sp-4) 0;border-right:0;border-bottom:1px solid var(--border)}
+  .brand{margin:0;grid-column:1;grid-row:1}
+  .dnav>.nav{grid-column:1/-1;grid-row:2}
+  .dnav-foot{grid-column:2;grid-row:1}
+  .brand-name{font-size:16px}
+  .brand-sub,.nav-h,.recent,.recent-h{display:none}
+  .nav{flex-direction:row;margin:0}
+  .nav a{border-left:0;border-bottom:2px solid transparent;border-radius:var(--r-md) var(--r-md) 0 0;padding:0 var(--sp-3)}
+  .nav a[aria-current="page"]{border-bottom-color:var(--brand-terracotta)}
+  .nav .n,.nav .lbl-long{display:none}
+  .nav .lbl-short{display:inline}
+  .dnav-foot{border:0;padding:0;flex-direction:row;align-items:center}
+  .dnav-foot .nav button{width:36px;padding:0;justify-content:center;border:0;border-radius:var(--r-md)}
+  .uchip{width:auto;border:0;padding:2px}
+  .uchip .who,.uchip svg{display:none}
+  .theme-row .caps{display:none}
+  .dmain-in{padding:var(--sp-5) var(--sp-4) var(--sp-9)}
+}
+@media (max-width:760px){
+  .phead h1{font-size:28px}
+  .phead .actions{margin-left:0}
+  .row2{grid-template-columns:1fr}
+  .cont{grid-template-columns:1fr}
+  .cont img,.cont .ph{display:none}
+  .toolbar .sel{flex:1;min-width:0}
+  .stage,.stage.view{grid-template-columns:minmax(0,1fr)}
+  aside#side{position:fixed;left:0;top:0;bottom:0;width:min(350px,90vw);z-index:20;transform:translateX(-102%);transition:transform var(--d-slow) var(--e);
+    padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);box-shadow:var(--sh-3)}
+  aside#side.open{transform:none}
+  .stage.view aside#side{display:none}
+  .scrim.on{display:block;position:fixed;inset:0;background:rgba(10,9,8,.5);z-index:15}
+  #btnMenu{display:grid}
+  .stage.view #btnMenu{display:none}
+  .topbar .btn .lbl{display:none}
+  .hs-panel{left:10px;right:10px;width:auto;top:auto;bottom:10px;max-height:62%}
+  .chip{width:110px;height:60px}
+  .viewer.has-bottom .pill{bottom:132px}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<!-- ================= Dashboard ================= -->
+<div id="dash" class="page">
+  <nav class="dnav" aria-label="Main">
+    <a class="brand" href="#/" id="brand"></a>
+    <div class="caps nav-h">Workspace</div>
+    <ul class="nav">
+      <li><a href="#/" id="navTours"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/></svg>Tours<span class="n" id="navToursN"></span></a></li>
+      <li><a href="#/photos" id="navPhotos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-8 8"/></svg><span class="lbl-long">Photo library</span><span class="lbl-short">Photos</span><span class="n" id="navPhotosN"></span></a></li>
+    </ul>
+    <div class="caps nav-h recent-h" id="recentH">Recently viewed</div>
+    <div class="recent" id="recent"></div>
+    <div class="dnav-foot">
+      <button type="button" class="uchip" id="uChip" title="Switch user"></button>
+      <ul class="nav" style="margin:0" id="settingsNav"><li><button type="button" id="btnSettings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg><span class="lbl-long">Settings</span></button></li></ul>
+      <div class="theme-row"><span class="caps">Theme</span><div class="seg theme-seg" role="group" aria-label="Theme"></div></div>
+    </div>
+  </nav>
+
+  <main class="dmain" id="dmain">
+    <div class="dmain-in">
+      <header class="phead">
+        <div><h1 id="pageTitle"></h1><p id="pageSub"></p></div>
+        <div class="actions"><button class="btn primary" id="btnNew" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>New tour</button></div>
+      </header>
+
+      <section class="card cont" id="cont" hidden></section>
+
+      <div class="toolbar">
+        <label class="field search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+          <input id="fQ" type="search" aria-label="Search"></label>
+        <select class="sel" id="fEvent" aria-label="Event type"></select>
+        <select class="sel" id="fSort" aria-label="Sort">
+          <option value="updated">Recently edited</option>
+          <option value="date">Event date</option>
+          <option value="name">Name</option>
+          <option value="photos">Most photos</option>
+        </select>
+        <div class="seg" role="group" aria-label="Layout" id="viewSeg">
+          <button type="button" data-v="grid" aria-label="Cards" title="Cards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7.5" height="7.5" rx="1"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1"/></svg></button>
+          <button type="button" data-v="table" aria-label="Table" title="Table"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+        </div>
+      </div>
+      <div class="filters">
+        <div class="chiprow" id="hallChips"></div>
+        <div class="chiprow" id="tagBar"></div>
+      </div>
+
+      <section id="photoRes" hidden>
+        <div class="sec-h"><h2>Matching photos</h2><small id="photoResN"></small></div>
+        <div class="photo-grid" id="photoGrid"></div>
+      </section>
+      <section id="toursSec">
+        <div class="sec-h"><h2 id="toursH">Tours</h2><small id="toursN"></small></div>
+        <div id="tourList"></div>
+      </section>
+      <section id="libSec" hidden>
+        <div class="sec-h"><h2 id="libH">All photos</h2><small id="libN"></small></div>
+        <div class="photo-grid" id="libGrid"></div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<!-- ================= Stage (viewer + builder) ================= -->
+<div id="stage" class="page stage" hidden>
+  <aside id="side" aria-label="Tour builder">
+    <div class="side-head">
+      <a class="back" href="#/"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Dashboard</a>
+      <div class="side-title" id="sTitle"></div>
+      <div class="chiprow" id="sBadges"></div>
+      <div><button class="btn sm" id="btnDetails" type="button">Edit tour details</button></div>
+    </div>
+    <div class="tabs" role="tablist">
+      <button type="button" role="tab" id="tabPhotos" aria-selected="true">Photos</button>
+      <button type="button" role="tab" id="tabPhoto" aria-selected="false">Selected photo</button>
+    </div>
+    <div class="side-body" id="panePhotos">
+      <div class="upload">
+        <label class="field"><span>Space for new photos</span><input id="upSpace" list="spaceList" maxlength="40" placeholder="Entrance, Stage, Dining"></label>
+        <label class="field"><span>Quality</span>
+          <select id="upQuality">
+            <option value="max">Maximum (recommended)</option>
+            <option value="high">High (smaller files)</option>
+            <option value="balanced">Balanced (fastest)</option>
+            <option value="lossless">Lossless (very large)</option>
+          </select></label>
+        <button class="btn primary block" id="btnUpload" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add 360° photos</button>
+        <input type="file" id="file" accept="image/jpeg,image/png,image/webp,.insp,.dng" multiple hidden>
+      </div>
+      <div id="groups" style="display:flex;flex-direction:column;gap:var(--sp-4)"></div>
+    </div>
+    <div class="side-body" id="panePhoto" hidden>
+      <label class="field"><span>Photo name</span><input id="phName" maxlength="50"></label>
+      <label class="field"><span>Space</span><input id="phSpace" list="spaceList" maxlength="40"></label>
+      <label class="field"><span>Hall</span><select id="phHall"></select></label>
+      <div class="field"><span>Tags</span><div class="tagin" id="phTags"></div></div>
+      <p class="details" id="phDetails"></p>
+      <div class="btnrow">
+        <button class="btn" id="btnStart" type="button">Make start</button>
+        <button class="btn" id="btnCover" type="button">Set as cover</button>
+      </div>
+      <button class="btn danger" id="btnDel" type="button">Delete this photo</button>
+    </div>
+    <div class="side-foot"><span id="storage"></span><div class="seg theme-seg" role="group" aria-label="Theme"></div></div>
+  </aside>
+  <div class="scrim" id="scrim"></div>
+
+  <main class="viewer" id="viewer">
+    <div id="gl"></div>
+    <div id="hotspots"></div>
+    <div class="fade" id="fade"></div>
+
+    <div class="topbar">
+      <button class="icon-btn" id="btnMenu" type="button" aria-label="Open photo list">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+      <a class="icon-btn" id="btnBack" href="#/" aria-label="Back to dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></a>
+      <div class="scene-title" id="sceneTitle"></div>
+      <div class="spacer"></div>
+      <button class="btn primary sm" id="btnAddHs" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg><span class="lbl" id="addHsT">Add hotspot</span></button>
+      <button class="btn glass sm" id="btnSaveView" type="button" title="Visitors arriving at this photo will face the direction you're looking now">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><span class="lbl">Save this view</span></button>
+      <a class="btn glass sm" id="btnPreview" href="#/">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l14 8-14 8z"/></svg><span class="lbl">Preview</span></a>
+      <a class="btn glass sm" id="btnBuilder" href="#/">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg><span class="lbl">Open builder</span></a>
+      <button class="icon-btn" id="btnFull" type="button" aria-label="Full screen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+    </div>
+
+    <div class="hint" id="hint" hidden>Click where the hotspot should go. Press Esc to cancel.</div>
+
+    <div class="hs-panel" id="hsPanel" hidden role="dialog" aria-label="Hotspot settings">
+      <div class="hp-top"><strong>Hotspot</strong><button class="x" id="hpClose" type="button" aria-label="Close">×</button></div>
+      <div class="seg2" id="hpAction"><button type="button" data-a="scene">Go to photo</button><button type="button" data-a="info">Info point</button></div>
+      <label class="field" id="hpSceneF"><span>Destination</span><select id="hpTarget"></select></label>
+      <div id="hpInfoF" style="display:flex;flex-direction:column;gap:var(--sp-3)">
+        <label class="field"><span>Title</span><input id="hpTitle" maxlength="60" placeholder="Bridal stage"></label>
+        <label class="field"><span>Details</span><textarea id="hpText" maxlength="600" placeholder="Seats 12 on stage, LED backdrop included"></textarea></label>
+      </div>
+      <div class="field"><span>Icon</span><div class="icon-grid" id="hpStyles"></div></div>
+      <div class="field"><span>Colour</span><div class="swatches" id="hpColors"></div></div>
+      <div class="field"><span>Size</span><div class="seg2" id="hpSize"><button type="button" data-s="s">Small</button><button type="button" data-s="m">Medium</button><button type="button" data-s="l">Large</button></div></div>
+      <label class="field"><span>Label</span><input id="hpLabel" maxlength="40"></label>
+      <div class="hp-actions"><button class="btn" id="hpGo" type="button">Go there</button><button class="btn danger" id="hpDel" type="button">Delete</button></div>
+    </div>
+
+    <div class="info-pop" id="infoPop" hidden role="dialog"><button class="x" id="ipClose" type="button" aria-label="Close">×</button><h3 id="ipTitle"></h3><p id="ipText"></p></div>
+
+    <div class="bottom" id="bottom" hidden><div class="space-tabs" id="spaceTabs"></div><div class="strip" id="strip"></div></div>
+    <div class="pill" id="pill" hidden><span id="pillI"></span><span id="pillT"></span></div>
+
+    <div class="empty" id="empty" hidden>
+      <div class="empty-in">
+        <div class="globe" aria-hidden="true"><i></i><i></i><i></i></div>
+        <h2 id="emptyH">Add the first 360° photo</h2>
+        <p id="emptyP"></p>
+        <button class="btn primary" id="emptyBtn" type="button">Add 360° photos</button>
+      </div>
+    </div>
+    <div class="loading" id="loading" hidden><div class="spin"></div><span>Loading photo</span></div>
+    <div class="drop" id="drop" hidden>Drop 360° photos to add them</div>
+  </main>
+</div>
+
+<!-- ================= Sign in ================= -->
+<div class="login" id="login" hidden>
+  <div class="login-box">
+    <div class="login-brand" id="loginBrand"></div>
+    <h1>Who is signing in?</h1>
+    <div class="user-grid" id="userGrid"></div>
+    <div class="pin-area" id="pinArea" hidden>
+      <div class="utile static" id="pinUser"></div>
+      <label class="field"><span>PIN</span><input id="pinIn" type="password" inputmode="numeric" autocomplete="off" maxlength="8"></label>
+      <div class="err" id="pinErr" hidden role="alert"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg><span>Incorrect PIN. Check it and try again.</span></div>
+      <div class="modal-actions"><button class="btn ghost" id="pinBack" type="button">Back</button><span class="spacer"></span><button class="btn primary" id="pinGo" type="button">Sign in</button></div>
+    </div>
+    <p class="note login-note">Ask an admin if your name is missing.</p>
+  </div>
+</div>
+
+<!-- ================= Modals ================= -->
+<div class="modal" id="tourModal" hidden>
+  <div class="modal-box" role="dialog" aria-labelledby="tmTitle">
+    <h2 id="tmTitle">New tour</h2>
+    <label class="field"><span>Tour name</span><input id="tmName" maxlength="70" placeholder="Khan wedding in Nova"></label>
+    <div class="field"><span>Halls</span><div class="chiprow" id="tmHalls"></div></div>
+    <div class="row2">
+      <label class="field"><span>Event type</span><select id="tmEvent"></select></label>
+      <label class="field"><span>Event date</span><input id="tmDate" type="date"></label>
+    </div>
+    <label class="field"><span>Client</span><input id="tmClient" maxlength="70" placeholder="Optional"></label>
+    <div class="field"><span>Tags</span><div class="tagin" id="tmTags"></div></div>
+    <div class="modal-actions">
+      <button class="btn danger" id="tmDelete" type="button">Delete tour</button>
+      <span class="spacer"></span>
+      <button class="btn ghost" id="tmCancel" type="button">Cancel</button>
+      <button class="btn primary" id="tmSave" type="button">Create tour</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="setModal" hidden>
+  <div class="modal-box" role="dialog" aria-labelledby="stTitle">
+    <h2 id="stTitle">Settings</h2>
+    <label class="field"><span>Venue name</span><input id="stVenue" maxlength="60"></label>
+    <div class="field"><span>Logo</span>
+      <div class="logo-row"><div class="logo-prev" id="stLogoPrev"></div>
+        <button class="btn sm" id="stLogoBtn" type="button">Upload logo</button>
+        <button class="btn sm danger" id="stLogoDel" type="button">Remove</button>
+        <input type="file" id="stLogoFile" accept="image/png,image/jpeg,image/webp,image/svg+xml" hidden></div>
+      <p class="note">A PNG with a transparent background works on both light and dark themes.</p>
+    </div>
+    <div class="row2">
+      <label class="field"><span>Halls, one per line</span><textarea id="stHalls" rows="5"></textarea></label>
+      <label class="field"><span>Event types, one per line</span><textarea id="stEvents" rows="5"></textarea></label>
+    </div>
+    <label class="field"><span>Default quality for new photos</span>
+      <select id="stQuality">
+        <option value="max">Maximum (recommended)</option>
+        <option value="high">High (smaller files)</option>
+        <option value="balanced">Balanced (fastest)</option>
+        <option value="lossless">Lossless (very large)</option>
+      </select></label>
+    <div class="field" id="stUsersF"><span>Users</span>
+      <div class="ulist" id="stUsers"></div>
+      <div><button class="btn sm" id="stAddUser" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add user</button></div>
+      <p class="note">Admins manage settings and users and can delete tours. Editors create and edit tours. Viewers search and view tours only. A PIN is optional; leave it blank to keep the current one.</p>
+    </div>
+    <p class="note" id="stStorage"></p>
+    <div class="modal-actions"><span class="spacer"></span>
+      <button class="btn ghost" id="stCancel" type="button">Cancel</button>
+      <button class="btn primary" id="stSave" type="button">Save settings</button></div>
+  </div>
+</div>
+
+<div class="queue" id="queue" hidden>
+  <div class="lrow"><div class="spin"></div><span id="qT">Preparing photos</span></div>
+  <div class="bar"><i id="qBar"></i></div>
+  <small id="qSub"></small>
+</div>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+<datalist id="spaceList"></datalist>
+<datalist id="tagList"></datalist>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+"use strict";
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid = () => Math.random().toString(36).slice(2,10) + Date.now().toString(36).slice(-5);
+const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
+const D2R = Math.PI/180, R2D = 180/Math.PI;
+const FOV_MIN = 20, FOV_MAX = 100, FOV_DEFAULT = 75;
+const CUBE = 10;
+const wait = ms => new Promise(r => setTimeout(r, ms));
+const fmtBytes = n => !n ? '0 MB' : n >= 1e9 ? (n/1e9).toFixed(2) + ' GB' : n >= 1e6 ? (n/1e6).toFixed(1) + ' MB' : Math.max(1, Math.round(n/1e3)) + ' KB';
+const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const fmtDate = d => { if (!d) return ''; const x = new Date(typeof d === 'string' ? d + 'T00:00:00' : d); return isNaN(x) ? '' : x.getDate() + ' ' + MON[x.getMonth()] + ' ' + x.getFullYear(); };
+const fmtNum = n => Number(n || 0).toLocaleString('en-US').replace(/,/g, '\u2009');
+const norm = s => String(s || '').trim().replace(/\s+/g, ' ');
+const lower = s => norm(s).toLowerCase();
+const uniq = arr => { const seen = new Set(), out = []; for (const x of arr){ const k = lower(x); if (x && !seen.has(k)){ seen.add(k); out.push(norm(x)); } } return out; };
+
+const TOAST_ICON = {
+  good:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16 10"/></svg>',
+  warn:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9.5 17h-19z"/><path d="M12 10v4"/><circle cx="12" cy="17.2" r=".6" fill="currentColor"/></svg>',
+  err:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg>'
+};
+function toast(msg, kind){
+  kind = kind || 'good';
+  const t = document.createElement('div');
+  t.className = 'toast ' + kind;
+  t.innerHTML = TOAST_ICON[kind] + '<span>' + esc(msg) + '</span>';
+  $('#toasts').appendChild(t);
+  setTimeout(() => t.remove(), kind === 'warn' || kind === 'err' ? 7000 : 3200);
+}
+if (!window.THREE){
+  document.body.innerHTML = '<div style="padding:40px;color:#ece7dc;font-family:sans-serif">The 3D viewer could not load. Check your internet connection and reload this page.</div>';
+  return;
+}
+
+/* ================= Icons ================= */
+const SVG = {
+  floor:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg>',
+  circle:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="7" fill="currentColor"/></svg>',
+  arrow:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>',
+  door:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v17M3 21h18"/><circle cx="15" cy="12" r="1" fill="currentColor"/></svg>',
+  stairs:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h5v-5h5v-5h5V5h3"/></svg>',
+  pin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>',
+  info:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 11v6"/><circle cx="12" cy="7" r="1.2" fill="currentColor" stroke="none"/></svg>',
+  eye:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>'
+};
+const STYLES = [
+  {id:'floor', name:'Floor arrow', flat:false},
+  {id:'circle', name:'Floor circle', flat:false, floor:true},
+  {id:'arrow', name:'Arrow', flat:true},
+  {id:'door', name:'Door', flat:true},
+  {id:'stairs', name:'Stairs', flat:true},
+  {id:'pin', name:'Pin', flat:true},
+  {id:'info', name:'Info', flat:true},
+  {id:'eye', name:'Look', flat:true}
+];
+const styleOf = id => STYLES.find(s => s.id === id) || STYLES[0];
+const COLORS = [
+  {id:'white', hex:'#ffffff', ic:'#141110', name:'White'},
+  {id:'salmon', hex:'#F4B49E', ic:'#2A1710', name:'Terracotta'},
+  {id:'gold', hex:'#E6C89B', ic:'#2A1710', name:'Champagne'},
+  {id:'teal', hex:'#3fb3a9', ic:'#06201e', name:'Teal'},
+  {id:'rose', hex:'#e2677a', ic:'#2a0a10', name:'Rose'},
+  {id:'ink', hex:'#141110', ic:'#F7F2ED', name:'Black'}
+];
+const colorOf = id => COLORS.find(c => c.id === id) || COLORS[0];
+
+/* ================= Data ================= */
+const meta = {
+  venue:'Montage Event Complex', logo:null,
+  halls:['Nova (full hall)', 'Nova Front', 'Cosmo', 'Opal'],
+  eventTypes:['Wedding', 'Mehndi', 'Barat', 'Walima', 'Engagement', 'Corporate', 'Conference', 'Birthday', 'Other'],
+  quality:'max', layout:'grid', theme:'system', users:[], viewed:{}, hs:{style:'floor', color:'white', size:'m'}
+};
+let projects = [], scenes = [];
+const projById = id => projects.find(p => p.id === id);
+const byId = id => scenes.find(s => s.id === id);
+const scenesOf = pid => scenes.filter(s => s.projectId === pid).sort((a, b) => a.order - b.order);
+function spacesOf(pid){ return uniq(scenesOf(pid).map(s => s.space || 'General')); }
+function coverOf(p){ const list = scenesOf(p.id); return byId(p.coverId) || byId(p.startId) || list[0] || null; }
+function normHotspot(h){
+  return Object.assign({action:'scene', target:'', style:'floor', color:'white', size:'m', label:'', title:'', text:''}, h);
+}
+function normScene(s){
+  s.hotspots = (s.hotspots || []).map(normHotspot);
+  s.tags = s.tags || []; s.space = s.space || 'General'; s.hall = s.hall || ''; s.view = s.view || null;
+  return s;
+}
+function normProject(p){
+  return Object.assign({name:'Untitled tour', halls:[], eventType:'', eventDate:'', client:'', tags:[], startId:null, coverId:null, createdAt:Date.now(), updatedAt:Date.now()}, p);
+}
+
+/* ================= Storage ================= */
+let db = null, saveWarned = false;
+const memTiles = new Map();
+function openDB(){
+  return new Promise((res, rej) => {
+    const r = indexedDB.open('tour360-hq', 2);
+    r.onupgradeneeded = () => {
+      const d = r.result, n = d.objectStoreNames;
+      if (!n.contains('scenes')) d.createObjectStore('scenes', {keyPath:'id'});
+      if (!n.contains('tiles')) d.createObjectStore('tiles');
+      if (!n.contains('meta')) d.createObjectStore('meta');
+      if (!n.contains('projects')) d.createObjectStore('projects', {keyPath:'id'});
+    };
+    r.onsuccess = () => res(r.result);
+    r.onerror = () => rej(r.error);
+    r.onblocked = () => rej(new Error('blocked'));
+  });
+}
+function idb(store, mode, fn){
+  return new Promise((res, rej) => {
+    const t = db.transaction(store, mode);
+    const req = fn(t.objectStore(store));
+    t.oncomplete = () => res(req ? req.result : undefined);
+    t.onerror = () => rej(t.error);
+    t.onabort = () => rej(t.error || new Error('aborted'));
+  });
+}
+function saveFail(e){
+  console.warn(e);
+  if (!saveWarned){ saveWarned = true; toast('Your browser could not save changes. Free up disk space, or they will be lost when you close this page.', 'err'); }
+}
+async function putTiles(list){
+  if (!db){ list.forEach(t => memTiles.set(t.k, t.b)); return; }
+  await idb('tiles', 'readwrite', st => { list.forEach(t => st.put(t.b, t.k)); });
+}
+async function getTile(k){ if (!db) return memTiles.get(k); return await idb('tiles', 'readonly', st => st.get(k)); }
+async function deleteTiles(id){
+  if (!db){ for (const k of [...memTiles.keys()]) if (k.startsWith(id + '/')) memTiles.delete(k); return; }
+  try { await idb('tiles', 'readwrite', st => st.delete(IDBKeyRange.bound(id + '/', id + '/\uffff'))); } catch(e){ console.warn(e); }
+}
+const sceneRecord = s => ({id:s.id, projectId:s.projectId, name:s.name, space:s.space, hall:s.hall, tags:s.tags, thumb:s.thumb,
+  hotspots:s.hotspots, view:s.view, order:s.order, levels:s.levels, info:s.info});
+async function saveScene(s){ if (!db || !s) return; try { await idb('scenes', 'readwrite', st => st.put(sceneRecord(s))); } catch(e){ saveFail(e); } }
+async function saveProject(p){ if (!db || !p) return; try { await idb('projects', 'readwrite', st => st.put(Object.assign({}, p))); } catch(e){ saveFail(e); } }
+async function saveMeta(){ if (!db) return; try { await idb('meta', 'readwrite', st => st.put(Object.assign({}, meta), 'app')); } catch(e){ saveFail(e); } }
+const timers = {};
+function touch(p){ if (!p) return; p.updatedAt = Date.now(); const u = me(); if (u) p.updatedBy = u.name; clearTimeout(timers['p' + p.id]); timers['p' + p.id] = setTimeout(() => saveProject(p), 400); }
+function saveSoon(s){ if (!s) return; clearTimeout(timers[s.id]); timers[s.id] = setTimeout(() => saveScene(s), 300); touch(projById(s.projectId)); }
+async function storageText(){
+  const total = scenes.reduce((a, s) => a + ((s.info && s.info.bytes) || 0), 0);
+  let txt = 'Stored tours: ' + fmtBytes(total);
+  try {
+    if (navigator.storage && navigator.storage.estimate){
+      const e = await navigator.storage.estimate();
+      if (e.quota) txt += '. Browser space left: ' + fmtBytes(Math.max(0, e.quota - e.usage));
+    }
+  } catch(e){}
+  return txt + '.';
+}
+
+/* ================= Tag input component ================= */
+function makeTagInput(el, onChange){
+  let tags = [];
+  el.innerHTML = '';
+  const input = document.createElement('input');
+  input.setAttribute('list', 'tagList'); input.placeholder = 'Add a tag and press Enter'; input.maxLength = 30;
+  function draw(){
+    [...el.querySelectorAll('.tg')].forEach(n => n.remove());
+    tags.forEach((t, i) => {
+      const s = document.createElement('span'); s.className = 'tg';
+      s.innerHTML = esc(t) + '<button type="button" aria-label="Remove ' + esc(t) + '">×</button>';
+      s.querySelector('button').addEventListener('click', e => { e.stopPropagation(); tags.splice(i, 1); draw(); onChange && onChange(tags.slice()); });
+      el.insertBefore(s, input);
+    });
+  }
+  function commit(){
+    const parts = input.value.split(',').map(norm).filter(Boolean);
+    if (!parts.length) return;
+    tags = uniq(tags.concat(parts)); input.value = ''; draw(); onChange && onChange(tags.slice());
+  }
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ','){ e.preventDefault(); commit(); }
+    else if (e.key === 'Backspace' && !input.value && tags.length){ tags.pop(); draw(); onChange && onChange(tags.slice()); }
+  });
+  input.addEventListener('blur', commit);
+  el.addEventListener('click', () => input.focus());
+  el.appendChild(input);
+  return { set(t){ tags = (t || []).slice(); input.value = ''; draw(); }, get(){ commit(); return tags.slice(); } };
+}
+function refreshDatalists(pid){
+  $('#tagList').innerHTML = uniq(projects.flatMap(p => p.tags).concat(scenes.flatMap(s => s.tags))).map(t => '<option value="' + esc(t) + '">').join('');
+  if (pid) $('#spaceList').innerHTML = uniq(spacesOf(pid).concat(['Entrance', 'Stage', 'Dining', 'Lounge', 'Bridal room', 'Outdoor'])).map(t => '<option value="' + esc(t) + '">').join('');
+}
+
+
+/* ================= Theme ================= */
+const THEME_ICONS = {
+  system:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M8 20h8M12 16v4"/></svg>',
+  light:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></svg>',
+  dark:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>'
+};
+const THEME_NAMES = {system:'Match system', light:'Light', dark:'Dark'};
+let themeMem = null;
+function getTheme(){ try { const v = localStorage.getItem('m360-theme'); return (v === 'light' || v === 'dark') ? v : 'system'; } catch(e){ return themeMem || meta.theme || 'system'; } }
+function applyTheme(v){ if (v === 'light' || v === 'dark') document.documentElement.setAttribute('data-theme', v); else document.documentElement.removeAttribute('data-theme'); }
+function renderThemeSegs(){
+  const v = getTheme();
+  document.querySelectorAll('.theme-seg').forEach(el => {
+    el.innerHTML = ['system', 'light', 'dark'].map(k => '<button type="button" data-theme="' + k + '" aria-pressed="' + (k === v) + '" aria-label="' + THEME_NAMES[k] + '" title="' + THEME_NAMES[k] + '">' + THEME_ICONS[k] + '</button>').join('');
+  });
+}
+function setTheme(v){
+  themeMem = v;
+  try { if (v === 'system') localStorage.removeItem('m360-theme'); else localStorage.setItem('m360-theme', v); } catch(e){}
+  meta.theme = v; saveMeta(); applyTheme(v); renderThemeSegs();
+}
+document.addEventListener('click', e => { const b = e.target.closest('.theme-seg button'); if (b) setTheme(b.dataset.theme); });
+
+/* ================= Users & roles ================= */
+const ROLES = {admin:'Admin', editor:'Editor', viewer:'Viewer'};
+let currentUserId = null;
+function me(){ return (meta.users || []).find(u => u.id === currentUserId) || null; }
+function can(perm){
+  const u = me(); if (!u) return false;
+  if (perm === 'admin') return u.role === 'admin';
+  if (perm === 'edit') return u.role === 'admin' || u.role === 'editor';
+  return true;
+}
+function storeUser(id){ currentUserId = id; try { if (id) localStorage.setItem('m360-user', id); else localStorage.removeItem('m360-user'); } catch(e){} }
+function loadUserId(){ try { return localStorage.getItem('m360-user'); } catch(e){ return null; } }
+async function hashPin(id, pin){
+  const txt = 'm360:' + id + ':' + pin;
+  try {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(txt));
+    return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+  } catch(e){
+    let h = 2166136261; for (const ch of txt){ h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); }
+    return 'f' + (h >>> 0).toString(16);
+  }
+}
+const initials = n => norm(n).split(' ').filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join('') || '?';
+const visibleProjects = () => can('edit') ? projects : projects.filter(p => scenesOf(p.id).length);
+
+/* ================= Recently viewed (per user) ================= */
+function markViewed(pid){
+  const u = me(); if (!u) return;
+  meta.viewed = meta.viewed || {};
+  const list = (meta.viewed[u.id] || []).filter(x => x.id !== pid);
+  list.unshift({id:pid, at:Date.now()});
+  meta.viewed[u.id] = list.slice(0, 10);
+  saveMeta();
+}
+function recentlyViewed(){
+  const u = me(); if (!u || !meta.viewed) return [];
+  const vis = new Set(visibleProjects().map(p => p.id));
+  return (meta.viewed[u.id] || []).filter(x => vis.has(x.id)).map(x => ({p:projById(x.id), at:x.at}));
+}
+/* ================= Geometry conventions =================
+   lon = yaw in degrees (+ turns right), lat = pitch (+ looks up).
+   Equirectangular: u = 0.5 is straight ahead, v = 0 is straight up. */
+const FACES = [
+  {F:[0,0,-1], R:[1,0,0],  U:[0,1,0]},
+  {F:[1,0,0],  R:[0,0,1],  U:[0,1,0]},
+  {F:[0,0,1],  R:[-1,0,0], U:[0,1,0]},
+  {F:[-1,0,0], R:[0,0,-1], U:[0,1,0]},
+  {F:[0,1,0],  R:[1,0,0],  U:[0,0,1]},
+  {F:[0,-1,0], R:[1,0,0],  U:[0,0,-1]}
+];
+function tileRect(n, r, c){ return {s0:-1 + 2*c/n, s1:-1 + 2*(c+1)/n, tT:1 - 2*r/n, tB:1 - 2*(r+1)/n}; }
+function facePoint(f, s, t, k){
+  const {F, R, U} = FACES[f];
+  return [(F[0] + s*R[0] + t*U[0])*k, (F[1] + s*R[1] + t*U[1])*k, (F[2] + s*R[2] + t*U[2])*k];
+}
+function planLevels(W){
+  const maxFace = Math.max(512, Math.round(W / Math.PI));
+  const levels = [{faceSize:512, n:1}];
+  let f = 1024, n = 2;
+  while (f < maxFace * 0.75){ levels.push({faceSize:f, n}); f *= 2; n *= 2; }
+  if (maxFace > 512 * 1.15){
+    const nTop = Math.max(1, Math.pow(2, Math.ceil(Math.log2(maxFace / 1024))));
+    levels.push({faceSize: Math.ceil(maxFace / nTop) * nTop, n: nTop});
+  }
+  return levels;
+}
+
+/* ================= Processing: equirectangular -> cube tile pyramid (GPU) ================= */
+const QUALITY = { max:0.95, high:0.9, balanced:0.82 };
+const canWebp = (() => { try { const c = document.createElement('canvas'); c.width = c.height = 1; return c.toDataURL('image/webp').indexOf('data:image/webp') === 0; } catch(e){ return false; } })();
+const VS = '#version 300 es\nin vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
+const FS = `#version 300 es
+precision highp float; precision highp int;
+uniform sampler2D t0; uniform sampler2D t1; uniform sampler2D t2; uniform sampler2D t3;
+uniform int uN; uniform vec4 uS0; uniform vec4 uS1; uniform vec4 uS2; uniform vec4 uS3;
+uniform vec3 uF; uniform vec3 uR; uniform vec3 uU; uniform vec4 uRect; uniform vec2 uSize;
+out vec4 o;
+const float PI = 3.141592653589793;
+vec2 uvAt(vec2 p){
+  float s = mix(uRect.x, uRect.y, p.x); float t = mix(uRect.z, uRect.w, p.y);
+  vec3 d = normalize(uF + s*uR + t*uU);
+  return vec2(atan(d.x, -d.z)/(2.*PI) + .5, .5 - asin(clamp(d.y,-1.,1.))/PI);
+}
+vec2 wrapD(vec2 d){ if (d.x > .5) d.x -= 1.; else if (d.x < -.5) d.x += 1.; return d; }
+vec4 samp(vec2 uv, vec2 dx, vec2 dy){
+  float u = fract(uv.x); vec4 s = uS0; int i = 0;
+  if (uN > 1 && u >= uS0.y){ s = uS1; i = 1; }
+  if (uN > 2 && u >= uS1.y){ s = uS2; i = 2; }
+  if (uN > 3 && u >= uS2.y){ s = uS3; i = 3; }
+  vec2 tuv = vec2((u - s.z)/s.w, uv.y);
+  vec2 gx = vec2(dx.x/s.w, dx.y), gy = vec2(dy.x/s.w, dy.y);
+  if (i == 0) return textureGrad(t0, tuv, gx, gy);
+  if (i == 1) return textureGrad(t1, tuv, gx, gy);
+  if (i == 2) return textureGrad(t2, tuv, gx, gy);
+  return textureGrad(t3, tuv, gx, gy);
+}
+void main(){
+  vec2 px = 1./uSize; vec2 base = gl_FragCoord.xy * px; vec3 acc = vec3(0.);
+  for (int k = 0; k < 4; k++){
+    vec2 p = base + vec2(float(k % 2) - .5, float(k / 2) - .5) * .5 * px;
+    vec2 uv = uvAt(p);
+    vec2 dx = wrapD(uvAt(p + vec2(px.x*.5, 0.)) - uv);
+    vec2 dy = wrapD(uvAt(p + vec2(0., px.y*.5)) - uv);
+    acc += samp(uv, dx, dy).rgb;
+  }
+  o = vec4(acc * .25, 1.);
+}`;
+function compile(gl, type, src){
+  const sh = gl.createShader(type); gl.shaderSource(sh, src); gl.compileShader(sh);
+  if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) throw new Error('shader: ' + gl.getShaderInfoLog(sh));
+  return sh;
+}
+async function decodeFull(file){
+  try { return await createImageBitmap(file, {colorSpaceConversion:'none', premultiplyAlpha:'none'}); } catch(e){}
+  return await createImageBitmap(file);
+}
+function toBlob(canvas, type, q){ return new Promise((res, rej) => canvas.toBlob(b => b ? res(b) : rej(new Error('encode')), type, q)); }
+
+async function processPanorama(file, sceneId, quality, onProg){
+  let bmp = await decodeFull(file);
+  const origW = bmp.width, origH = bmp.height;
+  let W = origW, H = origH;
+
+  const tc = document.createElement('canvas'); tc.width = 480; tc.height = 240;
+  const tx = tc.getContext('2d'); tx.imageSmoothingQuality = 'high'; tx.drawImage(bmp, 0, 0, 480, 240);
+  const thumb = tc.toDataURL('image/jpeg', 0.75);
+
+  const cv = document.createElement('canvas'); cv.width = cv.height = 16;
+  const gl = cv.getContext('webgl2', {antialias:false, alpha:false, premultipliedAlpha:false, preserveDrawingBuffer:true});
+  if (!gl){ bmp.close(); throw new Error('nowebgl2'); }
+  const maxTex = gl.getParameter(gl.MAX_TEXTURE_SIZE);
+  let reduced = false;
+  const maxW = maxTex * 4 - 64;
+  if (H > maxTex || W > maxW){
+    const sc = Math.min(maxTex / H, maxW / W);
+    const small = await createImageBitmap(bmp, {resizeWidth:Math.floor(W*sc), resizeHeight:Math.floor(H*sc), resizeQuality:'high'});
+    bmp.close(); bmp = small; W = bmp.width; H = bmp.height; reduced = true;
+  }
+
+  const prog = gl.createProgram();
+  gl.attachShader(prog, compile(gl, gl.VERTEX_SHADER, VS));
+  gl.attachShader(prog, compile(gl, gl.FRAGMENT_SHADER, FS));
+  gl.linkProgram(prog);
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) throw new Error('link: ' + gl.getProgramInfoLog(prog));
+  gl.useProgram(prog);
+  const vb = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, vb);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
+  const loc = gl.getAttribLocation(prog, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+  const U = n => gl.getUniformLocation(prog, n);
+
+  const aniso = gl.getExtension('EXT_texture_filter_anisotropic');
+  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+  gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
+  gl.pixelStorei(gl.UNPACK_COLORSPACE_CONVERSION_WEBGL, gl.NONE);
+  const N = Math.max(1, Math.ceil(W / (maxTex - 16)));
+  const OV = 8, texes = [], sl = [];
+  for (let i = 0; i < N; i++){
+    const x0 = Math.floor(i*W/N), x1 = Math.floor((i+1)*W/N);
+    const ox0 = N > 1 ? Math.max(0, x0 - OV) : 0, ox1 = N > 1 ? Math.min(W, x1 + OV) : W;
+    const im = N > 1 ? await createImageBitmap(bmp, ox0, 0, ox1 - ox0, H) : bmp;
+    const t = gl.createTexture();
+    gl.activeTexture(gl.TEXTURE0 + i); gl.bindTexture(gl.TEXTURE_2D, t);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA8, gl.RGBA, gl.UNSIGNED_BYTE, im);
+    gl.generateMipmap(gl.TEXTURE_2D);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, N === 1 ? gl.REPEAT : gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    if (aniso) gl.texParameterf(gl.TEXTURE_2D, aniso.TEXTURE_MAX_ANISOTROPY_EXT, Math.min(16, gl.getParameter(aniso.MAX_TEXTURE_MAX_ANISOTROPY_EXT)));
+    if (N > 1) im.close();
+    texes.push(t);
+    sl.push([x0/W, i === N-1 ? 2 : x1/W, ox0/W, (ox1 - ox0)/W]);
+  }
+  bmp.close();
+  if (gl.getError() === gl.OUT_OF_MEMORY) throw new Error('gpu-oom');
+  for (let i = 0; i < 4; i++){
+    gl.uniform1i(U('t' + i), Math.min(i, N - 1));
+    const s = sl[Math.min(i, N - 1)]; gl.uniform4f(U('uS' + i), s[0], s[1], s[2], s[3]);
+  }
+  gl.uniform1i(U('uN'), N);
+
+  const levels = planLevels(W);
+  const mime = quality === 'lossless' ? 'image/png' : (canWebp ? 'image/webp' : 'image/jpeg');
+  const q = QUALITY[quality] || 0.95;
+  const total = levels.reduce((a, l) => a + 6*l.n*l.n, 0);
+  let done = 0, bytes = 0; const levelBytes = levels.map(() => 0);
+  const enc = document.createElement('canvas'), ectx = enc.getContext('2d');
+  for (let li = 0; li < levels.length; li++){
+    const lv = levels[li], ts = lv.faceSize / lv.n;
+    cv.width = cv.height = ts; enc.width = enc.height = ts;
+    gl.viewport(0, 0, ts, ts);
+    gl.uniform2f(U('uSize'), ts, ts);
+    const buf = new Uint8Array(ts*ts*4);
+    for (let f = 0; f < 6; f++){
+      const {F, R, U: Up} = FACES[f];
+      gl.uniform3fv(U('uF'), F); gl.uniform3fv(U('uR'), R); gl.uniform3fv(U('uU'), Up);
+      const jobs = [];
+      for (let r = 0; r < lv.n; r++) for (let c = 0; c < lv.n; c++){
+        const rc = tileRect(lv.n, r, c);
+        gl.uniform4f(U('uRect'), rc.s0, rc.s1, rc.tT, rc.tB);
+        gl.drawArrays(gl.TRIANGLES, 0, 3);
+        gl.readPixels(0, 0, ts, ts, gl.RGBA, gl.UNSIGNED_BYTE, buf);
+        ectx.putImageData(new ImageData(new Uint8ClampedArray(buf.buffer.slice(0)), ts, ts), 0, 0);
+        const k = sceneId + '/' + li + '/' + f + '/' + r + '/' + c;
+        jobs.push(toBlob(enc, mime, q).then(b => ({k, b})));
+      }
+      const res = await Promise.all(jobs);
+      res.forEach(t => { bytes += t.b.size; levelBytes[li] += t.b.size; });
+      await putTiles(res);
+      done += jobs.length;
+      onProg(done / total);
+    }
+  }
+  texes.forEach(t => gl.deleteTexture(t));
+  const lose = gl.getExtension('WEBGL_lose_context'); if (lose) lose.loseContext();
+  return {thumb, levels, info:{origW, origH, W, H, reduced, ratio:origW/origH, bytes, tiles:total, fmt:mime.split('/')[1], quality, levelBytes, fileBytes:file.size}};
+}
+
+
+/* ================= Viewer engine ================= */
+const glWrap = $('#gl'), viewer = $('#viewer'), hsLayer = $('#hotspots'), stageEl = $('#stage');
+const renderer = new THREE.WebGLRenderer({antialias:false});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+glWrap.appendChild(renderer.domElement);
+const isGL2 = renderer.capabilities.isWebGL2;
+const maxAniso = renderer.capabilities.getMaxAnisotropy();
+const scene3 = new THREE.Scene();
+scene3.background = new THREE.Color(0x000000);
+const camera = new THREE.PerspectiveCamera(FOV_DEFAULT, 1, 0.1, 100);
+const BUDGET = (window.matchMedia && matchMedia('(pointer: coarse)').matches) ? 140e6 : 360e6;
+
+const S = { P:null, mode:'view', currentId:null, placing:false, selHs:null, space:null };
+const cur = () => byId(S.currentId);
+let stageActive = false;
+
+let lon = 0, lat = 0, fov = FOV_DEFAULT, vw = 1, vh = 1;
+function dirFrom(lo, la){
+  const a = lo * D2R, l = la * D2R, c = Math.cos(l);
+  return new THREE.Vector3(Math.sin(a)*c, Math.sin(l), -Math.cos(a)*c);
+}
+function updateCamera(){
+  lat = clamp(lat, -85, 85);
+  camera.lookAt(dirFrom(lon, lat));
+  camera.fov = fov; camera.updateProjectionMatrix(); camera.updateMatrixWorld();
+}
+function lonLatFromScreen(cx, cy){
+  const r = glWrap.getBoundingClientRect();
+  const v = new THREE.Vector3(((cx - r.left)/r.width)*2 - 1, -((cy - r.top)/r.height)*2 + 1, 0.5).unproject(camera).normalize();
+  return { lon: Math.atan2(v.x, -v.z) * R2D, lat: Math.asin(clamp(v.y, -1, 1)) * R2D };
+}
+function resize(){
+  const w = glWrap.clientWidth, h = glWrap.clientHeight;
+  if (!w || !h) return;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h; vw = w; vh = h;
+}
+if (window.ResizeObserver) new ResizeObserver(resize).observe(glWrap); else window.addEventListener('resize', resize);
+
+const boundsCache = new Map();
+function levelBounds(n){
+  if (boundsCache.has(n)) return boundsCache.get(n);
+  const arr = [];
+  for (let f = 0; f < 6; f++) for (let r = 0; r < n; r++) for (let c = 0; c < n; c++){
+    const rc = tileRect(n, r, c);
+    const pts = [[rc.s0, rc.tT], [rc.s1, rc.tT], [rc.s0, rc.tB], [rc.s1, rc.tB]].map(p => new THREE.Vector3().fromArray(facePoint(f, p[0], p[1], CUBE)));
+    const center = pts.reduce((a, p) => a.add(p), new THREE.Vector3()).multiplyScalar(0.25);
+    const rad = Math.max.apply(null, pts.map(p => p.distanceTo(center)));
+    arr.push({f, r, c, sphere:new THREE.Sphere(center, rad * 1.02), dir:center.clone().normalize()});
+  }
+  boundsCache.set(n, arr);
+  return arr;
+}
+let gpuBytes = 0;
+class TileSet {
+  constructor(s){ this.s = s; this.group = new THREE.Group(); this.tiles = new Map(); this.loading = new Set(); this.disposed = false; }
+  key(l, f, r, c){ return this.s.id + '/' + l + '/' + f + '/' + r + '/' + c; }
+  async loadTile(l, f, r, c){
+    const k = this.key(l, f, r, c);
+    if (this.tiles.has(k) || this.loading.has(k) || this.disposed) return;
+    this.loading.add(k);
+    try {
+      const blob = await getTile(k);
+      if (!blob) throw new Error('missing tile ' + k);
+      const bmp = await createImageBitmap(blob);
+      if (this.disposed){ bmp.close(); return; }
+      const mesh = makeTileMesh(this.s.levels[l].n, l, f, r, c, bmp);
+      const bytes = bmp.width * bmp.height * 4 * (isGL2 ? 1.34 : 1);
+      this.group.add(mesh);
+      this.tiles.set(k, {mesh, level:l, used:performance.now(), bytes});
+      gpuBytes += bytes;
+    } finally { this.loading.delete(k); }
+  }
+  loadBase(){ const p = []; for (let f = 0; f < 6; f++) p.push(this.loadTile(0, f, 0, 0)); return Promise.all(p); }
+  drop(k){
+    const t = this.tiles.get(k); if (!t) return;
+    this.group.remove(t.mesh);
+    const im = t.mesh.material.map.image;
+    t.mesh.geometry.dispose(); t.mesh.material.map.dispose(); t.mesh.material.dispose();
+    if (im && im.close && !t.mesh.userData.closed) im.close();
+    gpuBytes -= t.bytes; this.tiles.delete(k);
+  }
+  dispose(){ this.disposed = true; for (const k of [...this.tiles.keys()]) this.drop(k); }
+}
+function makeTileMesh(n, l, f, r, c, bmp){
+  const rc = tileRect(n, r, c);
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute([].concat(
+    facePoint(f, rc.s0, rc.tT, CUBE), facePoint(f, rc.s1, rc.tT, CUBE), facePoint(f, rc.s0, rc.tB, CUBE), facePoint(f, rc.s1, rc.tB, CUBE)), 3));
+  g.setAttribute('uv', new THREE.Float32BufferAttribute([0,0, 1,0, 0,1, 1,1], 2));
+  g.setIndex([0,2,1, 1,2,3]);
+  g.computeBoundingSphere();
+  const tex = new THREE.Texture(bmp);
+  tex.flipY = false;
+  tex.wrapS = tex.wrapT = THREE.ClampToEdgeWrapping;
+  tex.magFilter = THREE.LinearFilter;
+  tex.generateMipmaps = isGL2;
+  tex.minFilter = isGL2 ? THREE.LinearMipmapLinearFilter : THREE.LinearFilter;
+  tex.anisotropy = maxAniso;
+  tex.needsUpdate = true;
+  const m = new THREE.MeshBasicMaterial({map:tex, side:THREE.DoubleSide, depthTest:false, depthWrite:false});
+  const mesh = new THREE.Mesh(g, m);
+  mesh.renderOrder = l;
+  mesh.onAfterRender = function(){
+    if (this.userData.closed) return;
+    this.userData.closed = true;
+    const im = this.material.map.image;
+    setTimeout(() => { if (im && im.close) im.close(); }, 0);
+  };
+  return mesh;
+}
+
+let activeTS = null, queue = [], inflight = 0, lastUpd = 0;
+const frustum = new THREE.Frustum(), pm = new THREE.Matrix4(), camDir = new THREE.Vector3(), tmpV = new THREE.Vector3();
+function desiredLevel(ts){
+  const pxPerRad = (vh * renderer.getPixelRatio() / 2) / Math.tan(fov * D2R / 2);
+  const lv = ts.s.levels;
+  for (let i = 0; i < lv.length; i++) if (lv[i].faceSize >= pxPerRad * 1.7) return i;
+  return lv.length - 1;
+}
+function pump(){
+  const ts = activeTS; if (!ts) return;
+  while (inflight < 6 && queue.length){
+    const it = queue.shift();
+    if (ts.tiles.has(it.k) || ts.loading.has(it.k)) continue;
+    inflight++;
+    ts.loadTile(it.l, it.f, it.r, it.c).catch(e => console.warn(e)).finally(() => { inflight--; if (ts === activeTS) pump(); });
+  }
+}
+function updateTiles(now){
+  const ts = activeTS; if (!ts) return;
+  if (now - lastUpd < 90) return; lastUpd = now;
+  pm.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
+  frustum.setFromProjectionMatrix(pm);
+  camera.getWorldDirection(camDir);
+  const L = desiredLevel(ts);
+  const want = [];
+  for (const t of levelBounds(ts.s.levels[L].n)){
+    if (!frustum.intersectsSphere(t.sphere)) continue;
+    const k = ts.key(L, t.f, t.r, t.c);
+    const e = ts.tiles.get(k);
+    if (e) e.used = now;
+    else if (!ts.loading.has(k)) want.push({l:L, f:t.f, r:t.r, c:t.c, k, pri:-t.dir.dot(camDir)});
+  }
+  for (const e of ts.tiles.values()){
+    if (e.level > 0 && e.used !== now && frustum.intersectsSphere(e.mesh.geometry.boundingSphere)) e.used = now - 1;
+  }
+  want.sort((a, b) => a.pri - b.pri);
+  queue = want;
+  pump();
+  if (gpuBytes > BUDGET){
+    const cands = [...ts.tiles.entries()].filter(([, e]) => e.level > 0 && e.used < now - 1).sort((a, b) => a[1].used - b[1].used);
+    for (const [k] of cands){ if (gpuBytes < BUDGET * 0.8) break; ts.drop(k); }
+  }
+  const pending = want.length + ts.loading.size;
+  const pill = $('#pill');
+  pill.hidden = false;
+  const st = pending > 0 ? 'busy' : 'ok';
+  const txt = pending > 0 ? 'Loading detail' : (L === ts.s.levels.length - 1 ? 'Full resolution' : 'Sharp at this zoom');
+  if (pill.dataset.st !== st){
+    pill.dataset.st = st; pill.className = 'pill ' + st;
+    $('#pillI').innerHTML = st === 'ok' ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>'
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
+  }
+  if ($('#pillT').textContent !== txt) $('#pillT').textContent = txt;
+}
+
+/* ----- Neighbour preloading: linked photos are ready before anyone clicks ----- */
+const prepared = new Map();
+function prepare(s){ const ts = new TileSet(s); ts.baseP = ts.loadBase(); ts.baseP.catch(() => {}); return ts; }
+function takePrepared(id){
+  const ts = prepared.get(id);
+  if (ts){ prepared.delete(id); return ts; }
+  return prepare(byId(id));
+}
+let prepTimer = null;
+function prepareNeighbours(){
+  clearTimeout(prepTimer);
+  prepTimer = setTimeout(() => {
+    const c = cur();
+    const want = new Set(c ? c.hotspots.filter(h => h.action === 'scene' && byId(h.target) && h.target !== c.id).map(h => h.target).slice(0, 6) : []);
+    for (const [id, ts] of prepared){ if (!want.has(id)){ ts.dispose(); prepared.delete(id); } }
+    for (const id of want){ if (!prepared.has(id)) prepared.set(id, prepare(byId(id))); }
+  }, 500);
+}
+function clearPrepared(){ for (const ts of prepared.values()) ts.dispose(); prepared.clear(); }
+
+/* ================= Scene switching ================= */
+let loadToken = 0, busy = false;
+function clearViewer(){
+  if (activeTS){ scene3.remove(activeTS.group); activeTS.dispose(); activeTS = null; }
+  queue = []; $('#pill').hidden = true; $('#pill').dataset.st = ''; clearPrepared();
+}
+function setHash(){
+  if (!S.P) return;
+  const h = '#/' + (S.mode === 'edit' ? 'build' : 'tour') + '/' + S.P.id + (S.currentId ? '/' + S.currentId : '');
+  if (location.hash !== h){ try { history.replaceState(null, '', h); } catch(e){} }
+}
+async function showScene(id, view, pre){
+  const s = byId(id); if (!s) return false;
+  const tok = ++loadToken;
+  const slow = setTimeout(() => { $('#loading').hidden = false; }, 150);
+  const ts = pre || new TileSet(s);
+  try { await (ts.baseP || ts.loadBase()); }
+  catch(e){
+    clearTimeout(slow); $('#loading').hidden = true; ts.dispose();
+    toast('This photo could not be opened. Delete it and add it again.', 'err'); return false;
+  }
+  clearTimeout(slow); $('#loading').hidden = true;
+  if (tok !== loadToken || !stageActive){ ts.dispose(); return false; }
+  if (activeTS){ scene3.remove(activeTS.group); activeTS.dispose(); }
+  activeTS = ts; scene3.add(ts.group); lastUpd = 0; queue = [];
+  S.currentId = id; S.selHs = null; S.placing = false; S.space = s.space;
+  if (view){ lon = view.lon; lat = view.lat; }
+  fov = FOV_DEFAULT;
+  hideInfo();
+  renderStage();
+  setHash();
+  prepareNeighbours();
+  return true;
+}
+function viewFor(s, fallbackLon){ return s.view ? {lon:s.view.lon, lat:s.view.lat} : {lon: fallbackLon != null ? fallbackLon : lon, lat:0}; }
+async function fadeTo(id){
+  if (busy || id === S.currentId || !byId(id)) return;
+  busy = true;
+  const s = byId(id), pre = takePrepared(id);
+  $('#fade').classList.add('on'); await wait(220);
+  await showScene(id, viewFor(s), pre);
+  $('#fade').classList.remove('on');
+  busy = false;
+}
+let anim = null;
+function tween(from, to, ms, apply){ return new Promise(res => { anim = {t0:performance.now(), from, to, ms, apply, res}; }); }
+function stepAnim(now){
+  const a = anim; const p = Math.min(1, (now - a.t0) / a.ms);
+  const e = p < .5 ? 2*p*p : 1 - Math.pow(-2*p + 2, 2)/2;
+  const v = {}; for (const k in a.from) v[k] = a.from[k] + (a.to[k] - a.from[k]) * e;
+  a.apply(v);
+  if (p >= 1){ anim = null; a.res(); }
+}
+async function walkTo(h){
+  const target = byId(h.target);
+  if (busy || !target) return;
+  busy = true; S.selHs = null; renderHsPanel();
+  const pre = takePrepared(target.id);
+  const dLon = ((h.lon - lon) % 360 + 540) % 360 - 180;
+  const from = {lon, lat, fov};
+  const to = {lon: lon + dLon, lat: clamp(h.lat*0.4, -30, 10), fov: Math.max(FOV_MIN + 10, fov*0.7)};
+  const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduce) await tween(from, to, 420, v => { lon = v.lon; lat = v.lat; fov = v.fov; });
+  $('#fade').classList.add('on'); await wait(220);
+  await showScene(target.id, viewFor(target, to.lon), pre);
+  $('#fade').classList.remove('on');
+  busy = false;
+}
+
+/* ================= Hotspots ================= */
+let hsEls = [];
+function hsLabel(h){
+  if (h.label) return h.label;
+  if (h.action === 'info') return h.title || 'Info';
+  const t = byId(h.target); return t ? t.name : 'Choose a destination';
+}
+function hsShapeHTML(h){ return '<div class="hs-shape">' + SVG[styleOf(h.style).id] + '</div>'; }
+/* Floor hotspots (floor arrow, circle) are real 3D rings lying on the floor, like Matterport.
+   The camera is assumed to sit EYE units above a flat floor; each ring keeps a fixed real-world
+   size, so near rings look big and oval and far ones small and flat. */
+const EYE = 1.6, RING_R = 0.3, SIZE_K = {s:0.72, m:1, l:1.35}, RING_TILT = 15 * D2R;
+const isFloorStyle = st => st === 'circle';
+const hsGroup = new THREE.Group(); scene3.add(hsGroup);
+const ringTex = new Map();
+function rgba(hex, a){ const n = parseInt(hex.slice(1), 16); return 'rgba(' + (n >> 16 & 255) + ',' + (n >> 8 & 255) + ',' + (n & 255) + ',' + a + ')'; }
+function ringTexture(style, hex){
+  const key = style + hex; if (ringTex.has(key)) return ringTex.get(key);
+  const N = 256, R = N / 2, c = document.createElement('canvas'); c.width = c.height = N;
+  const g = c.getContext('2d'); g.translate(R, R);
+  g.beginPath(); g.arc(0, 0, R*0.74, 0, Math.PI*2); g.fillStyle = rgba(hex, 0.16); g.fill();
+  g.shadowColor = 'rgba(0,0,0,0.35)'; g.shadowBlur = N*0.035;
+  g.beginPath(); g.arc(0, 0, R*0.8, 0, Math.PI*2); g.lineWidth = R*0.15; g.strokeStyle = rgba(hex, 0.95); g.stroke();
+  if (style === 'floor'){
+    g.beginPath(); g.moveTo(-R*0.3, R*0.14); g.lineTo(0, -R*0.18); g.lineTo(R*0.3, R*0.14);
+    g.lineWidth = R*0.13; g.lineCap = 'round'; g.lineJoin = 'round'; g.stroke();
+  }
+  const t = new THREE.CanvasTexture(c); t.anisotropy = maxAniso;
+  ringTex.set(key, t); return t;
+}
+function clearFloorMeshes(){
+  for (const m of hsGroup.children.slice()){ hsGroup.remove(m); m.geometry.dispose(); m.material.dispose(); }
+}
+function makeFloorMesh(h){
+  const r = RING_R * (SIZE_K[h.size] || 1);
+  const mat = new THREE.MeshBasicMaterial({map:ringTexture(h.style, colorOf(h.color).hex), transparent:true, opacity:0.88,
+    depthTest:false, depthWrite:false, side:THREE.DoubleSide});
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(2*r, 2*r), mat);
+  m.rotation.order = 'YXZ'; m.rotation.x = -Math.PI/2 + RING_TILT; m.renderOrder = 1000; m.userData.r = r;
+  hsGroup.add(m);
+  return m;
+}
+const tmpP = new THREE.Vector3(), tmpQ = new THREE.Vector3();
+function floorPoint(h, out){
+  if (h.lat > -2) return null;
+  const d = dirFrom(h.lon, h.lat);
+  return out.copy(d).multiplyScalar(Math.min(EYE / -d.y, 16));
+}
+function renderHotspots(){
+  const c = cur(); hsLayer.innerHTML = ''; hsEls = []; clearFloorMeshes();
+  if (!c) return;
+  c.hotspots.forEach(h => {
+    const st = styleOf(h.style), col = colorOf(h.color);
+    const broken = h.action === 'scene' && !byId(h.target);
+    if (broken && S.mode !== 'edit') return;
+    const el = document.createElement('div');
+    el.className = 'hs st-' + st.id + ' sz-' + h.size + (st.flat ? ' flat' : '') + (h.id === S.selHs ? ' sel' : '') + (broken ? ' broken' : '') + (h.label ? ' always' : '');
+    el.style.setProperty('--c', col.hex); el.style.setProperty('--ic', col.ic);
+    el.innerHTML = '<div class="hs-hit" role="button" tabindex="0">' + hsShapeHTML(h) + '</div><div class="hs-label">' + esc(hsLabel(h)) + '</div>';
+    const hit = el.firstChild;
+    hit.setAttribute('aria-label', h.action === 'info' ? 'Info: ' + hsLabel(h) : 'Go to ' + hsLabel(h));
+    const entry = {el, h, hit, label:el.lastChild, mesh: isFloorStyle(st.id) ? makeFloorMesh(h) : null, hover:false, flr:null};
+    if (entry.mesh && broken) entry.mesh.material.opacity = 0.5;
+    hit.addEventListener('pointerenter', () => { entry.hover = true; });
+    hit.addEventListener('pointerleave', () => { entry.hover = false; });
+    attachHs(hit, el, h);
+    hsLayer.appendChild(el); hsEls.push(entry);
+  });
+  positionHotspots();
+}
+function setFlr(en, on){
+  if (en.flr === on) return;
+  en.flr = on; en.el.classList.toggle('flr', on);
+  if (!on){ en.hit.style.cssText = ''; en.label.style.top = ''; }
+}
+function activateHs(h){
+  if (h.action === 'info') showInfo(h);
+  else walkTo(h);
+}
+function attachHs(hit, el, h){
+  hit.addEventListener('pointerdown', e => {
+    e.stopPropagation();
+    if (S.mode !== 'edit' || busy) return;
+    e.preventDefault();
+    hit.setPointerCapture(e.pointerId);
+    const sx = e.clientX, sy = e.clientY; let moved = false;
+    const mv = ev => {
+      if (!moved && Math.hypot(ev.clientX - sx, ev.clientY - sy) < 5) return;
+      moved = true; el.classList.add('dragging');
+      const ll = lonLatFromScreen(ev.clientX, ev.clientY); h.lon = ll.lon; h.lat = ll.lat;
+    };
+    const up = () => {
+      hit.removeEventListener('pointermove', mv); hit.removeEventListener('pointerup', up); hit.removeEventListener('pointercancel', up);
+      el.classList.remove('dragging');
+      if (moved) saveSoon(cur()); else selectHs(h.id);
+    };
+    hit.addEventListener('pointermove', mv); hit.addEventListener('pointerup', up); hit.addEventListener('pointercancel', up);
+  });
+  hit.addEventListener('click', e => { e.stopPropagation(); if (S.mode === 'view') activateHs(h); });
+  hit.addEventListener('keydown', e => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    e.preventDefault();
+    if (S.mode === 'view') activateHs(h); else selectHs(h.id);
+  });
+}
+function positionHotspots(){
+  if (!hsEls.length) return;
+  camera.getWorldDirection(camDir);
+  for (const en of hsEls){
+    const {el, h} = en;
+    const p = en.mesh ? floorPoint(h, tmpP) : null;
+    if (en.mesh){
+      en.mesh.visible = !!p;
+      if (p){
+        en.mesh.position.copy(p);
+        en.mesh.rotation.y = -h.lon * D2R;
+        const k = en.hover || h.id === S.selHs ? 1.12 : 1;
+        en.mesh.scale.set(k, k, 1);
+        en.mesh.material.opacity = (h.action === 'scene' && !byId(h.target)) ? 0.5 : (en.hover ? 1 : 0.88);
+      }
+    }
+    setFlr(en, !!p);
+    const d = p ? tmpQ.copy(p).normalize() : dirFrom(h.lon, h.lat);
+    if (d.dot(camDir) < 0.12){ el.style.visibility = 'hidden'; continue; }
+    tmpV.copy(p || d.multiplyScalar(5)).project(camera);
+    const x = (tmpV.x + 1) / 2 * vw, y = (1 - tmpV.y) / 2 * vh;
+    el.style.visibility = 'visible';
+    el.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0)';
+    if (p){
+      // Clickable area = the ring's on-screen ellipse
+      const r = en.mesh.userData.r;
+      let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+      en.mesh.updateMatrixWorld();
+      for (const o of [[1,0],[-1,0],[0,1],[0,-1]]){
+        tmpV.set(o[0]*r, o[1]*r, 0).applyMatrix4(en.mesh.matrixWorld).project(camera);
+        const sx = (tmpV.x + 1) / 2 * vw, sy = (1 - tmpV.y) / 2 * vh;
+        x0 = Math.min(x0, sx); x1 = Math.max(x1, sx); y0 = Math.min(y0, sy); y1 = Math.max(y1, sy);
+      }
+      const w = clamp(x1 - x0, 40, 600), hh = clamp(y1 - y0, 26, 400);
+      en.hit.style.cssText = 'left:' + (-w/2).toFixed(1) + 'px;top:' + (-hh/2).toFixed(1) + 'px;width:' + w.toFixed(1) + 'px;height:' + hh.toFixed(1) + 'px';
+      en.label.style.top = (hh/2 + 6).toFixed(1) + 'px';
+    }
+  }
+}
+function selHotspot(){ const c = cur(); return c && c.hotspots.find(x => x.id === S.selHs); }
+function selectHs(id){ S.selHs = id; S.placing = false; renderHotspots(); renderHsPanel(); renderTopbar(); }
+
+/* ----- Hotspot settings panel ----- */
+$('#hpStyles').innerHTML = STYLES.map(s => '<button type="button" data-st="' + s.id + '" aria-pressed="false"><span class="ico' + (s.flat ? ' flat' : '') + (s.floor ? ' flr' : '') + '">' + SVG[s.id] + '</span>' + esc(s.name) + '</button>').join('');
+$('#hpColors').innerHTML = COLORS.map(c => '<button type="button" data-col="' + c.id + '" aria-pressed="false" aria-label="' + c.name + '" title="' + c.name + '" style="background:' + c.hex + '"></button>').join('');
+function renderHsPanel(){
+  const panel = $('#hsPanel'), c = cur(), h = selHotspot();
+  if (!h || S.mode !== 'edit'){ panel.hidden = true; return; }
+  panel.hidden = false;
+  [...$('#hpAction').children].forEach(b => b.setAttribute('aria-pressed', b.dataset.a === h.action));
+  $('#hpSceneF').hidden = h.action !== 'scene';
+  $('#hpInfoF').hidden = h.action !== 'info';
+  const others = scenesOf(S.P.id).filter(s => s.id !== c.id);
+  const groups = uniq(others.map(s => s.space));
+  $('#hpTarget').innerHTML = '<option value="" disabled' + (byId(h.target) ? '' : ' selected') + '>' + (others.length ? 'Choose a photo…' : 'Add another photo first') + '</option>' +
+    groups.map(g => '<optgroup label="' + esc(g) + '">' + others.filter(s => lower(s.space) === lower(g)).map(s =>
+      '<option value="' + s.id + '"' + (s.id === h.target ? ' selected' : '') + '>' + esc(s.name) + '</option>').join('') + '</optgroup>').join('');
+  $('#hpTarget').disabled = !others.length;
+  if (document.activeElement !== $('#hpTitle')) $('#hpTitle').value = h.title;
+  if (document.activeElement !== $('#hpText')) $('#hpText').value = h.text;
+  if (document.activeElement !== $('#hpLabel')) $('#hpLabel').value = h.label;
+  $('#hpLabel').placeholder = h.action === 'info' ? 'Uses the title' : 'Uses the destination name';
+  [...$('#hpStyles').children].forEach(b => b.setAttribute('aria-pressed', b.dataset.st === h.style));
+  [...$('#hpColors').children].forEach(b => b.setAttribute('aria-pressed', b.dataset.col === h.color));
+  [...$('#hpSize').children].forEach(b => b.setAttribute('aria-pressed', b.dataset.s === h.size));
+  $('#hpGo').hidden = h.action !== 'scene';
+  $('#hpGo').disabled = !byId(h.target);
+}
+function hsChanged(opts){
+  const c = cur(), h = selHotspot(); if (!h) return;
+  saveSoon(c); renderHotspots();
+  if (!opts || !opts.keepPanel) renderHsPanel();
+  if (opts && opts.remember){ meta.hs = {style:h.style, color:h.color, size:h.size}; saveMeta(); }
+  prepareNeighbours();
+}
+$('#hpAction').addEventListener('click', e => {
+  const b = e.target.closest('button'); const h = selHotspot(); if (!b || !h) return;
+  h.action = b.dataset.a;
+  if (h.action === 'info' && (h.style === 'floor' || h.style === 'circle')) h.style = 'info';
+  if (h.action === 'scene' && h.style === 'info') h.style = meta.hs.style === 'info' ? 'floor' : meta.hs.style;
+  hsChanged();
+});
+$('#hpTarget').addEventListener('change', e => { const h = selHotspot(); if (!h) return; h.target = e.target.value; hsChanged(); });
+$('#hpTitle').addEventListener('input', e => { const h = selHotspot(); if (!h) return; h.title = e.target.value; hsChanged({keepPanel:true}); });
+$('#hpText').addEventListener('input', e => { const h = selHotspot(); if (!h) return; h.text = e.target.value; hsChanged({keepPanel:true}); });
+$('#hpLabel').addEventListener('input', e => { const h = selHotspot(); if (!h) return; h.label = norm(e.target.value); hsChanged({keepPanel:true}); });
+$('#hpStyles').addEventListener('click', e => { const b = e.target.closest('button'); const h = selHotspot(); if (!b || !h) return; h.style = b.dataset.st; hsChanged({remember:true}); });
+$('#hpColors').addEventListener('click', e => { const b = e.target.closest('button'); const h = selHotspot(); if (!b || !h) return; h.color = b.dataset.col; hsChanged({remember:true}); });
+$('#hpSize').addEventListener('click', e => { const b = e.target.closest('button'); const h = selHotspot(); if (!b || !h) return; h.size = b.dataset.s; hsChanged({remember:true}); });
+$('#hpClose').addEventListener('click', () => selectHs(null));
+$('#hpGo').addEventListener('click', () => { const h = selHotspot(); if (h) walkTo(h); });
+$('#hpDel').addEventListener('click', deleteSelectedHs);
+function deleteSelectedHs(){
+  const c = cur(); if (!c || !S.selHs) return;
+  c.hotspots = c.hotspots.filter(x => x.id !== S.selHs);
+  S.selHs = null; saveSoon(c); renderStage(); prepareNeighbours(); toast('Hotspot deleted');
+}
+function showInfo(h){ $('#ipTitle').textContent = h.title || h.label || 'Info'; $('#ipText').textContent = h.text || ''; $('#infoPop').hidden = false; }
+function hideInfo(){ $('#infoPop').hidden = true; }
+$('#ipClose').addEventListener('click', hideInfo);
+
+/* ================= Pointer & keyboard controls ================= */
+const pointers = new Map(); let drag = null, pinch = null;
+glWrap.addEventListener('pointerdown', e => {
+  if (busy) return;
+  try { glWrap.setPointerCapture(e.pointerId); } catch(_){}
+  pointers.set(e.pointerId, {x:e.clientX, y:e.clientY});
+  if (pointers.size === 1){ drag = {x:e.clientX, y:e.clientY, lon, lat, moved:false}; glWrap.classList.add('grabbing'); }
+  else if (pointers.size === 2){ const [a, b] = [...pointers.values()]; pinch = {d:Math.hypot(a.x-b.x, a.y-b.y) || 1, fov}; if (drag) drag.moved = true; }
+});
+glWrap.addEventListener('pointermove', e => {
+  if (!pointers.has(e.pointerId)) return;
+  pointers.set(e.pointerId, {x:e.clientX, y:e.clientY});
+  if (pinch && pointers.size >= 2){
+    const [a, b] = [...pointers.values()];
+    fov = clamp(pinch.fov * pinch.d / (Math.hypot(a.x-b.x, a.y-b.y) || 1), FOV_MIN, FOV_MAX); return;
+  }
+  if (drag){
+    const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+    if (Math.hypot(dx, dy) > 4) drag.moved = true;
+    const k = fov / (glWrap.clientHeight || 1);
+    lon = drag.lon - dx * k; lat = clamp(drag.lat + dy * k, -85, 85);
+  }
+});
+function endPointer(e){
+  if (!pointers.has(e.pointerId)) return;
+  const was = drag;
+  pointers.delete(e.pointerId);
+  if (pointers.size < 2) pinch = null;
+  if (pointers.size === 0){
+    glWrap.classList.remove('grabbing'); drag = null;
+    if (was && !was.moved && e.type === 'pointerup') onViewerClick(e);
+  } else if (pointers.size === 1){
+    const p = [...pointers.values()][0]; drag = {x:p.x, y:p.y, lon, lat, moved:true};
+  }
+}
+glWrap.addEventListener('pointerup', endPointer);
+glWrap.addEventListener('pointercancel', endPointer);
+glWrap.addEventListener('wheel', e => { e.preventDefault(); fov = clamp(fov * Math.exp(e.deltaY * 0.0012), FOV_MIN, FOV_MAX); }, {passive:false});
+function onViewerClick(e){
+  hideInfo();
+  if (S.mode !== 'edit') return;
+  const c = cur(); if (!c) return;
+  if (S.placing){
+    const ll = lonLatFromScreen(e.clientX, e.clientY);
+    const others = scenesOf(S.P.id).filter(s => s.id !== c.id);
+    const d = meta.hs;
+    const h = normHotspot({id:uid(), lon:ll.lon, lat:ll.lat, target: others.length === 1 ? others[0].id : '',
+      style: d.style === 'info' ? 'floor' : d.style, color:d.color, size:d.size});
+    c.hotspots.push(h); saveSoon(c);
+    selectHs(h.id); renderSidebar();
+    return;
+  }
+  if (S.selHs) selectHs(null);
+}
+document.addEventListener('keydown', e => {
+  if (!$('#login').hidden) return;
+  if (!$('#tourModal').hidden || !$('#setModal').hidden){ if (e.key === 'Escape') closeModals(); return; }
+  if (!stageActive) return;
+  const typing = /^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement && document.activeElement.tagName);
+  if (e.key === 'Escape'){
+    if (S.placing){ S.placing = false; renderTopbar(); }
+    else if (S.selHs) selectHs(null);
+    hideInfo(); closeDrawer(); return;
+  }
+  if (typing) return;
+  if ((e.key === 'Delete' || e.key === 'Backspace') && S.selHs && S.mode === 'edit'){ e.preventDefault(); deleteSelectedHs(); return; }
+  if (e.key === 'ArrowLeft') lon -= 5; else if (e.key === 'ArrowRight') lon += 5;
+  else if (e.key === 'ArrowUp') lat += 5; else if (e.key === 'ArrowDown') lat -= 5;
+  else if (e.key === '+' || e.key === '=') fov = clamp(fov - 5, FOV_MIN, FOV_MAX);
+  else if (e.key === '-') fov = clamp(fov + 5, FOV_MIN, FOV_MAX);
+});
+
+/* ================= Stage rendering ================= */
+let tab = 'photos';
+const phTags = makeTagInput($('#phTags'), tags => { const c = cur(); if (!c) return; c.tags = tags; saveSoon(c); refreshDatalists(S.P.id); renderGroups(); });
+function sceneMeta(s){ const i = s.info || {}; return i.origW ? Math.round(i.origW * i.origH / 1e6) + 'MP' : ''; }
+function renderSidebar(){
+  const P = S.P; if (!P) return;
+  $('#sTitle').textContent = P.name;
+  $('#sBadges').innerHTML = (P.eventType ? '<span class="badge accent">' + esc(P.eventType) + '</span>' : '') +
+    P.halls.map(h => '<span class="badge">' + esc(h) + '</span>').join('') + (P.eventDate ? '<span class="badge">' + esc(fmtDate(P.eventDate)) + '</span>' : '');
+  $('#upQuality').value = meta.quality;
+  const c = cur();
+  $('#tabPhoto').disabled = !c;
+  if (!c && tab === 'photo') tab = 'photos';
+  $('#tabPhotos').setAttribute('aria-selected', tab === 'photos');
+  $('#tabPhoto').setAttribute('aria-selected', tab === 'photo');
+  $('#panePhotos').hidden = tab !== 'photos';
+  $('#panePhoto').hidden = tab !== 'photo';
+  renderGroups();
+  if (c) renderPhotoPane();
+  storageText().then(t => { $('#storage').textContent = t; }); renderThemeSegs();
+}
+function renderGroups(){
+  const P = S.P; if (!P) return;
+  const list = scenesOf(P.id);
+  if (!$('#upSpace').value) $('#upSpace').value = (cur() && cur().space) || 'General';
+  if (!list.length){ $('#groups').innerHTML = '<div class="list-empty">No photos yet. Pick a space name above, then add your 360° photos.</div>'; return; }
+  const groups = uniq(list.map(s => s.space));
+  $('#groups').innerHTML = groups.map(g => {
+    const items = list.filter(s => lower(s.space) === lower(g));
+    return '<div class="group"><div class="group-h"><input class="gname" value="' + esc(g) + '" data-space="' + esc(g) + '" aria-label="Space name" maxlength="40"><small>' +
+      items.length + (items.length === 1 ? ' photo' : ' photos') + '</small></div><ul class="scene-list">' +
+      items.map(s => {
+        const n = s.hotspots.length;
+        return '<li><button type="button" class="scene' + (s.id === S.currentId ? ' active' : '') + '" data-id="' + s.id + '">' +
+          '<img src="' + s.thumb + '" alt="" loading="lazy" decoding="async">' +
+          '<span style="min-width:0"><div class="scene-name">' + esc(s.name) + '</div>' +
+          '<div class="scene-sub">' + (s.id === P.startId ? '<span class="badge fill">Start</span>' : '') + (s.id === P.coverId ? '<span class="badge accent">Cover</span>' : '') +
+          n + (n === 1 ? ' hotspot' : ' hotspots') + (sceneMeta(s) ? ', ' + sceneMeta(s) : '') + '</div></span></button></li>';
+      }).join('') + '</ul></div>';
+  }).join('');
+}
+function renderPhotoPane(){
+  const c = cur(), P = S.P; if (!c) return;
+  if (document.activeElement !== $('#phName')) $('#phName').value = c.name;
+  if (document.activeElement !== $('#phSpace')) $('#phSpace').value = c.space;
+  const halls = uniq(P.halls.concat(meta.halls));
+  $('#phHall').innerHTML = '<option value="">Not set</option>' + halls.map(h => '<option' + (lower(h) === lower(c.hall) ? ' selected' : '') + '>' + esc(h) + '</option>').join('');
+  phTags.set(c.tags);
+  const i = c.info || {};
+  if (i.origW){
+    const lb = i.levelBytes || [];
+    const first = lb[0] || 0;
+    const sharpIdx = Math.min(lb.length - 1, 2);
+    const sharp = first + (lb[sharpIdx] || 0) * 0.25;
+    const qName = {max:'Maximum', high:'High', balanced:'Balanced', lossless:'Lossless'}[i.quality] || '';
+    $('#phDetails').innerHTML = 'Original <b>' + i.origW + ' × ' + i.origH + '</b>' + (i.fileBytes ? ', ' + fmtBytes(i.fileBytes) : '') +
+      (i.reduced ? '. Reduced to ' + i.W + ' × ' + i.H + ' because the graphics card that prepared it could not hold the full photo' : '. Kept at full resolution') +
+      '.<br>Stored as ' + i.tiles + ' ' + String(i.fmt || '').toUpperCase() + ' tiles (' + fmtBytes(i.bytes) + ', ' + qName + ' quality).' +
+      (first ? '<br>A visitor sees it after about <b>' + fmtBytes(first) + '</b> and it is sharp after about <b>' + fmtBytes(sharp) + '</b>.' : '');
+  } else $('#phDetails').textContent = '';
+  const isStart = c.id === P.startId, isCover = c.id === P.coverId || (!P.coverId && coverOf(P) === c);
+  $('#btnStart').disabled = isStart; $('#btnStart').textContent = isStart ? 'Start photo' : 'Make start';
+  $('#btnCover').disabled = isCover; $('#btnCover').textContent = isCover ? 'Tour cover' : 'Set as cover';
+}
+function renderTopbar(){
+  const c = cur(), edit = S.mode === 'edit';
+  $('#sceneTitle').innerHTML = c ? esc(c.name) + '<small>' + esc(edit ? c.space : S.P.name + ', ' + c.space) + '</small>' : (S.P ? esc(S.P.name) : '');
+  $('#btnAddHs').hidden = !edit || !c;
+  $('#btnSaveView').hidden = !edit || !c;
+  $('#btnPreview').hidden = !edit;
+  $('#btnBuilder').hidden = edit || !can('edit');
+  $('#btnBack').hidden = edit;
+  $('#btnAddHs').classList.toggle('on', S.placing);
+  $('#addHsT').textContent = S.placing ? 'Cancel' : 'Add hotspot';
+  $('#hint').hidden = !(S.placing && edit);
+  viewer.classList.toggle('placing', S.placing);
+  viewer.classList.toggle('editing', edit);
+  if (S.P){ $('#btnPreview').href = '#/tour/' + S.P.id + (c ? '/' + c.id : ''); $('#btnBuilder').href = '#/build/' + S.P.id + (c ? '/' + c.id : ''); }
+  const empty = S.P && !scenesOf(S.P.id).length;
+  $('#empty').hidden = !empty;
+  if (empty){
+    $('#emptyH').textContent = edit ? 'Add the first 360° photo' : 'This tour has no photos yet';
+    $('#emptyP').textContent = edit ? 'Export from Insta360 Studio as a full-resolution 360° JPG, then add it here or drag it onto this screen.' : 'Open the builder to add 360° photos and link them together.';
+    $('#emptyBtn').textContent = edit ? 'Add 360° photos' : 'Open builder';
+    $('#emptyBtn').hidden = !edit && !can('edit');
+    if (!edit && !can('edit')) $('#emptyP').textContent = 'Photos will appear here once an editor adds them.';
+  }
+}
+function renderBottom(){
+  const P = S.P, show = S.mode === 'view' && P && scenesOf(P.id).length > 1;
+  $('#bottom').hidden = !show;
+  viewer.classList.toggle('has-bottom', !!show);
+  if (!show){ $('#strip').innerHTML = ''; $('#spaceTabs').innerHTML = ''; return; }
+  const list = scenesOf(P.id), spaces = uniq(list.map(s => s.space));
+  const active = S.space && spaces.some(s => lower(s) === lower(S.space)) ? S.space : spaces[0];
+  $('#spaceTabs').hidden = spaces.length < 2;
+  $('#spaceTabs').innerHTML = spaces.map(sp => '<button type="button" data-space="' + esc(sp) + '" aria-pressed="' + (lower(sp) === lower(active)) + '">' + esc(sp) + '</button>').join('');
+  const shown = spaces.length < 2 ? list : list.filter(s => lower(s.space) === lower(active));
+  $('#strip').innerHTML = shown.map(s =>
+    '<button type="button" class="chip' + (s.id === S.currentId ? ' active' : '') + '" data-id="' + s.id + '" aria-label="Go to ' + esc(s.name) + '">' +
+    '<img src="' + s.thumb + '" alt="" loading="lazy" decoding="async"><span>' + esc(s.name) + '</span></button>').join('');
+}
+function renderStage(){
+  if (!S.P) return;
+  stageEl.classList.toggle('view', S.mode === 'view');
+  if (S.mode === 'edit') renderSidebar();
+  renderTopbar(); renderHotspots(); renderHsPanel(); renderBottom();
+}
+
+/* ================= Builder actions ================= */
+$('#tabPhotos').addEventListener('click', () => { tab = 'photos'; renderSidebar(); });
+$('#tabPhoto').addEventListener('click', () => { if (cur()){ tab = 'photo'; renderSidebar(); } });
+$('#groups').addEventListener('click', e => {
+  const b = e.target.closest('.scene'); if (!b) return;
+  closeDrawer();
+  const s = byId(b.dataset.id);
+  if (s && s.id !== S.currentId) showScene(s.id, viewFor(s));
+});
+$('#groups').addEventListener('change', e => {
+  const inp = e.target.closest('.gname'); if (!inp) return;
+  const from = inp.dataset.space, to = norm(inp.value);
+  if (!to){ inp.value = from; return; }
+  scenesOf(S.P.id).filter(s => lower(s.space) === lower(from)).forEach(s => { s.space = to; saveSoon(s); });
+  if (lower($('#upSpace').value) === lower(from)) $('#upSpace').value = to;
+  refreshDatalists(S.P.id); renderStage();
+});
+$('#groups').addEventListener('keydown', e => { if (e.target.closest('.gname') && e.key === 'Enter') e.target.blur(); });
+$('#phName').addEventListener('input', e => { const c = cur(); if (!c) return; c.name = norm(e.target.value) || 'Untitled photo'; saveSoon(c); renderGroups(); renderTopbar(); });
+$('#phSpace').addEventListener('change', e => { const c = cur(); if (!c) return; c.space = norm(e.target.value) || 'General'; saveSoon(c); S.space = c.space; refreshDatalists(S.P.id); renderStage(); });
+$('#phHall').addEventListener('change', e => { const c = cur(); if (!c) return; c.hall = e.target.value; saveSoon(c); });
+$('#upQuality').addEventListener('change', e => {
+  meta.quality = e.target.value; saveMeta();
+  if (meta.quality === 'lossless') toast('Lossless keeps every pixel exactly, but one X6 photo can take several hundred MB and loads slowly. Maximum looks the same to the eye.', 'warn');
+});
+$('#btnAddHs').addEventListener('click', () => {
+  if (scenesOf(S.P.id).length < 2 && !S.placing) toast('Tip: add another photo so this hotspot can link to it. You can still place an info point.', 'warn');
+  S.placing = !S.placing; S.selHs = null; hideInfo();
+  closeDrawer(); renderTopbar(); renderHotspots(); renderHsPanel();
+});
+$('#btnSaveView').addEventListener('click', () => {
+  const c = cur(); if (!c) return;
+  c.view = {lon: ((lon % 360) + 360) % 360, lat};
+  saveSoon(c); toast('View saved. Visitors arriving at this photo will face this way.');
+});
+$('#btnStart').addEventListener('click', () => { const c = cur(); if (!c) return; S.P.startId = c.id; touch(S.P); renderSidebar(); toast('Start photo set. The tour opens here.'); });
+$('#btnCover').addEventListener('click', () => { const c = cur(); if (!c) return; S.P.coverId = c.id; touch(S.P); renderSidebar(); toast('Cover set. It shows on the dashboard.'); });
+let delArmed = null;
+$('#btnDel').addEventListener('click', async () => {
+  const c = cur(); if (!c) return;
+  const btn = $('#btnDel');
+  if (delArmed !== c.id){
+    delArmed = c.id; btn.textContent = 'Click again to delete'; btn.classList.add('armed');
+    setTimeout(() => { if (delArmed === c.id){ delArmed = null; btn.textContent = 'Delete this photo'; btn.classList.remove('armed'); } }, 3000);
+    return;
+  }
+  delArmed = null; btn.textContent = 'Delete this photo'; btn.classList.remove('armed');
+  const P = S.P, list = scenesOf(P.id), idx = list.indexOf(c);
+  await removeScene(c);
+  const rest = scenesOf(P.id);
+  const next = rest[Math.min(idx, rest.length - 1)];
+  S.currentId = null;
+  if (next) await showScene(next.id, viewFor(next));
+  else { clearViewer(); tab = 'photos'; renderStage(); setHash(); }
+  toast('Photo deleted');
+});
+async function removeScene(c){
+  const P = projById(c.projectId);
+  scenes = scenes.filter(s => s !== c);
+  for (const s of scenes.filter(x => x.projectId === c.projectId)){
+    const before = s.hotspots.length;
+    s.hotspots = s.hotspots.filter(h => !(h.action === 'scene' && h.target === c.id));
+    if (s.hotspots.length !== before) saveScene(s);
+  }
+  if (db){ try { await idb('scenes', 'readwrite', st => st.delete(c.id)); } catch(e){ saveFail(e); } }
+  deleteTiles(c.id);
+  if (P){
+    if (P.startId === c.id) P.startId = (scenesOf(P.id)[0] || {}).id || null;
+    if (P.coverId === c.id) P.coverId = null;
+    touch(P);
+  }
+}
+$('#strip').addEventListener('click', e => { const b = e.target.closest('.chip'); if (b) fadeTo(b.dataset.id); });
+$('#spaceTabs').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  S.space = b.dataset.space;
+  const c = cur();
+  if (!c || lower(c.space) !== lower(S.space)){
+    const first = scenesOf(S.P.id).find(s => lower(s.space) === lower(S.space));
+    if (first){ fadeTo(first.id); return; }
+  }
+  renderBottom();
+});
+$('#emptyBtn').addEventListener('click', () => { if (S.mode === 'edit') $('#file').click(); else location.hash = '#/build/' + S.P.id; });
+$('#btnDetails').addEventListener('click', () => { if (can('edit')) openTourModal(S.P); });
+function closeDrawer(){ $('#side').classList.remove('open'); $('#scrim').classList.remove('on'); }
+$('#btnMenu').addEventListener('click', () => { $('#side').classList.add('open'); $('#scrim').classList.add('on'); });
+$('#scrim').addEventListener('click', closeDrawer);
+if (!(viewer.requestFullscreen || viewer.webkitRequestFullscreen)) $('#btnFull').style.display = 'none';
+$('#btnFull').addEventListener('click', () => {
+  try {
+    if (document.fullscreenElement || document.webkitFullscreenElement) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+    else (viewer.requestFullscreen || viewer.webkitRequestFullscreen).call(viewer);
+  } catch(e){ toast('Full screen is not available in this browser.', 'warn'); }
+});
+
+/* ================= Upload queue ================= */
+const uploadQ = []; let processing = false, qDone = 0, qTotal = 0, persistAsked = false;
+function cleanName(n){ return (n.replace(/\.[^.]+$/, '').replace(/[_-]+/g, ' ').replace(/\s+/g, ' ').trim() || 'Untitled photo').slice(0, 50); }
+function enqueue(files, pid, space){
+  const all = [...files];
+  const raw = all.filter(f => /\.(insp|dng)$/i.test(f.name));
+  if (raw.length) toast('INSP and DNG files must be exported first. In Insta360 Studio, export them as 360° JPG at original resolution, then add the JPGs.', 'warn');
+  const imgs = all.filter(f => !/\.(insp|dng)$/i.test(f.name) && (/^image\/(jpeg|png|webp)$/.test(f.type) || /\.(jpe?g|png|webp)$/i.test(f.name)));
+  if (!imgs.length){ if (!raw.length) toast('Choose JPG, PNG or WebP 360° photos.', 'warn'); return; }
+  imgs.sort((a, b) => a.name.localeCompare(b.name, undefined, {numeric:true}));
+  imgs.forEach(f => uploadQ.push({file:f, pid, space:norm(space) || 'General', quality:meta.quality}));
+  qTotal += imgs.length;
+  renderQueue(0);
+  if (!processing) runQueue();
+}
+function renderQueue(frac){
+  const box = $('#queue');
+  if (!processing && !uploadQ.length){ box.hidden = true; return; }
+  box.hidden = false;
+  const job = uploadQ[0];
+  $('#qT').textContent = 'Preparing photo ' + Math.min(qDone + 1, qTotal) + ' of ' + qTotal;
+  $('#qBar').style.width = Math.round(((qDone + (frac || 0)) / Math.max(1, qTotal)) * 100) + '%';
+  $('#qSub').textContent = job ? job.file.name + ' (' + fmtBytes(job.file.size) + ')' + ' into ' + (projById(job.pid) || {}).name + ', ' + job.space + '. You can keep working.' : '';
+}
+async function runQueue(){
+  processing = true;
+  if (!persistAsked && navigator.storage && navigator.storage.persist){ persistAsked = true; try { await navigator.storage.persist(); } catch(e){} }
+  let oddRatio = 0, reduced = 0, added = 0;
+  while (uploadQ.length){
+    const job = uploadQ[0];
+    renderQueue(0);
+    const P = projById(job.pid);
+    const id = uid();
+    if (P){
+      try {
+        const res = await processPanorama(job.file, id, job.quality, fr => renderQueue(fr));
+        const s = normScene({id, projectId:P.id, name:cleanName(job.file.name), space:job.space, hall:P.halls.length === 1 ? P.halls[0] : '', tags:[],
+          thumb:res.thumb, levels:res.levels, info:res.info, hotspots:[], view:null, order:Date.now()});
+        scenes.push(s);
+        if (!P.startId) P.startId = s.id;
+        await saveScene(s); touch(P); await saveProject(P);
+        added++;
+        if (Math.abs(res.info.ratio - 2) > 0.06) oddRatio++;
+        if (res.info.reduced) reduced++;
+        if (stageActive && S.P === P){
+          refreshDatalists(P.id);
+          if (!S.currentId) await showScene(s.id, {lon:0, lat:0}); else { renderSidebar(); renderBottom(); renderTopbar(); }
+        } else if (!stageActive) renderDash();
+      } catch(e){
+        console.warn(e); deleteTiles(id);
+        const m = String((e && e.message) || '') + String((e && e.name) || '');
+        if (/nowebgl2/.test(m)) toast('This browser cannot prepare photos. Use a recent Chrome, Edge, Firefox or Safari on a computer.', 'err');
+        else if (/quota/i.test(m)) toast('Not enough browser storage for ' + job.file.name + '. Free up disk space or choose a lower quality.', 'err');
+        else toast(job.file.name + ' could not be prepared. This device may not have enough memory for a photo this large; try on a computer.', 'err');
+      }
+    }
+    uploadQ.shift(); qDone++;
+  }
+  processing = false; qDone = 0; qTotal = 0;
+  renderQueue(0);
+  if (added) toast(added === 1 ? 'Photo added' : added + ' photos added');
+  if (oddRatio) toast(oddRatio + (oddRatio === 1 ? ' photo is' : ' photos are') + ' not 2:1, so they may look stretched. Export as a 360° (equirectangular) photo.', 'warn');
+  if (reduced) toast((reduced === 1 ? 'One photo was' : reduced + ' photos were') + ' reduced because this device\u2019s graphics card could not hold the full size. Add them from a desktop computer to keep every pixel.', 'warn');
+}
+const fileInput = $('#file');
+$('#btnUpload').addEventListener('click', () => fileInput.click());
+fileInput.addEventListener('change', () => { if (fileInput.files.length && S.P) enqueue(fileInput.files, S.P.id, $('#upSpace').value); fileInput.value = ''; });
+let dragDepth = 0;
+const hasFiles = e => e.dataTransfer && [...(e.dataTransfer.types || [])].includes('Files');
+document.addEventListener('dragenter', e => { if (!hasFiles(e)) return; e.preventDefault(); dragDepth++; if (stageActive && S.mode === 'edit') $('#drop').hidden = false; });
+document.addEventListener('dragover', e => { if (hasFiles(e)) e.preventDefault(); });
+document.addEventListener('dragleave', e => { if (!hasFiles(e)) return; dragDepth = Math.max(0, dragDepth - 1); if (!dragDepth) $('#drop').hidden = true; });
+document.addEventListener('drop', e => {
+  if (!hasFiles(e)) return; e.preventDefault(); dragDepth = 0; $('#drop').hidden = true;
+  if (!(stageActive && S.mode === 'edit')){ toast('Open a tour in the builder to add photos.', 'warn'); return; }
+  if (e.dataTransfer.files.length) enqueue(e.dataTransfer.files, S.P.id, $('#upSpace').value);
+});
+
+/* ================= Dashboard ================= */
+const F = {q:'', hall:'', event:'', tags:new Set(), sort:'updated'};
+let dashView = 'tours';
+const ICON_INFO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><circle cx="12" cy="8" r=".6" fill="currentColor"/></svg>';
+function renderBrand(){
+  $('#brand').innerHTML = meta.logo ? '<img src="' + meta.logo + '" alt="' + esc(meta.venue) + '">'
+    : '<span><div class="brand-name">Montage</div><div class="caps brand-sub">360° tours</div></span>';
+  document.title = dashView === 'photos' ? 'Photo library – Montage 360' : 'Tours – Montage 360';
+}
+function sceneVisible(s){ return !!projById(s.projectId); }
+function projectMatches(p){
+  const list = scenesOf(p.id);
+  if (F.hall && !p.halls.some(h => lower(h) === lower(F.hall)) && !list.some(s => lower(s.hall) === lower(F.hall))) return false;
+  if (F.event && lower(p.eventType) !== lower(F.event)) return false;
+  if (F.tags.size){
+    const all = new Set(p.tags.concat(list.flatMap(s => s.tags)).map(lower));
+    for (const t of F.tags) if (!all.has(t)) return false;
+  }
+  if (F.q){
+    const hay = [p.name, p.client, p.eventType, fmtDate(p.eventDate)].concat(p.halls, p.tags, list.flatMap(s => [s.name, s.space, s.hall].concat(s.tags))).join(' ').toLowerCase();
+    if (!F.q.split(/\s+/).every(w => hay.includes(w))) return false;
+  }
+  return true;
+}
+function sceneMatches(s){
+  const p = projById(s.projectId); if (!p) return false;
+  if (F.hall && lower(s.hall) !== lower(F.hall) && !p.halls.some(h => lower(h) === lower(F.hall))) return false;
+  if (F.event && lower(p.eventType) !== lower(F.event)) return false;
+  if (F.tags.size){ const all = new Set(s.tags.concat(p.tags).map(lower)); for (const t of F.tags) if (!all.has(t)) return false; }
+  if (F.q){
+    const hay = [s.name, s.space, s.hall, p.name].concat(s.tags).join(' ').toLowerCase();
+    if (!F.q.split(/\s+/).every(w => hay.includes(w))) return false;
+  }
+  return true;
+}
+const filtering = () => !!(F.q || F.hall || F.event || F.tags.size);
+function clearFilters(){ F.q = ''; F.hall = ''; F.event = ''; F.tags.clear(); $('#fQ').value = ''; renderDash(); }
+function hallBadges(p){ return p.halls.map(h => '<span class="badge">' + esc(h) + '</span>').join(''); }
+function eventBadge(p){ return p.eventType ? '<span class="badge accent">' + esc(p.eventType) + '</span>' : ''; }
+function tourHref(p){ return '#/' + (scenesOf(p.id).length || !can('edit') ? 'tour' : 'build') + '/' + p.id; }
+function photoCard(s){
+  const p = projById(s.projectId);
+  return '<button type="button" class="pcard" data-p="' + p.id + '" data-s="' + s.id + '"><img src="' + s.thumb + '" alt="" loading="lazy" decoding="async"><div><b>' + esc(s.name) + '</b>' +
+    '<span class="t2">' + esc(p.name) + '</span><span>' + esc(s.space) + (s.hall ? ', ' + esc(s.hall) : '') + '</span></div></button>';
+}
+function renderDash(){
+  renderBrand(); refreshDatalists(); renderThemeSegs(); renderUserChip();
+  const lib = dashView === 'photos';
+  const vp = visibleProjects(), edit = can('edit');
+  $('#btnNew').hidden = !edit;
+  $('#settingsNav').hidden = !can('admin');
+  $('#navTours').toggleAttribute('aria-current', !lib); if (!lib) $('#navTours').setAttribute('aria-current', 'page');
+  $('#navPhotos').toggleAttribute('aria-current', lib); if (lib) $('#navPhotos').setAttribute('aria-current', 'page');
+  $('#navToursN').textContent = fmtNum(vp.length);
+  $('#navPhotosN').textContent = fmtNum(scenes.length);
+  const byEdit = vp.slice().sort((a, b) => b.updatedAt - a.updatedAt);
+  const rv = recentlyViewed().slice(0, 6);
+  $('#recent').innerHTML = rv.length ? rv.map(({p}) => { const cv = coverOf(p);
+    return '<a href="' + tourHref(p) + '">' + (cv ? '<img src="' + cv.thumb + '" alt="" loading="lazy">' : '<span class="ph"></span>') + '<span>' + esc(p.name) + '</span></a>'; }).join('')
+    : '<p class="note" style="padding:0 8px">Tours you open appear here.</p>';
+
+  $('#pageTitle').innerHTML = lib ? 'Every view, <em>in one place</em>' : '360° tours of <em>every hall</em>';
+  $('#pageSub').textContent = lib ? 'All 360° photos across your tours. Search by name, space, hall or tag.'
+    : meta.venue + (edit ? '. Walkthroughs built from Insta360 photos, organised by hall and event.' : '. Search and view walkthroughs of every hall and event.');
+  $('#fQ').placeholder = lib ? 'Search photos, spaces or tags' : 'Search tours, clients, spaces or tags';
+
+  // Continue editing
+  const hp = byEdit[0], cont = $('#cont');
+  cont.hidden = lib || !hp || filtering();
+  if (hp && !cont.hidden){
+    const cv = coverOf(hp), n = scenesOf(hp.id).length, sp = spacesOf(hp.id).length;
+    cont.innerHTML = (cv ? '<img src="' + cv.thumb + '" alt="">' : '<span class="ph"></span>') +
+      '<div style="min-width:0"><div class="caps">' + (edit ? 'Continue editing' : 'Recently updated') + '</div><h2>' + esc(hp.name) + '</h2><div class="chiprow">' + eventBadge(hp) + hallBadges(hp) + '</div>' +
+      '<div class="tsub" style="margin-top:8px">' + fmtNum(n) + (n === 1 ? ' photo' : ' photos') + ' in ' + fmtNum(sp) + (sp === 1 ? ' space' : ' spaces') + '. Edited ' + esc(fmtDate(hp.updatedAt)) + (hp.updatedBy ? ' by ' + esc(hp.updatedBy) : '') + '.</div></div>' +
+      '<div class="acts">' + (edit ? (n ? '<a class="btn" href="#/tour/' + hp.id + '">View tour</a>' : '') + '<a class="btn primary" href="#/build/' + hp.id + '">Open builder</a>'
+        : '<a class="btn primary" href="#/tour/' + hp.id + '">View tour</a>') + '</div>';
+  }
+
+  // Toolbar + filters
+  const none = !vp.length;
+  document.querySelector('.toolbar').hidden = none;
+  document.querySelector('.filters').hidden = none;
+  const evs = uniq(meta.eventTypes.concat(vp.map(p => p.eventType).filter(Boolean)));
+  $('#fEvent').innerHTML = '<option value="">All event types</option>' + evs.map(h => '<option' + (lower(h) === lower(F.event) ? ' selected' : '') + '>' + esc(h) + '</option>').join('');
+  $('#fSort').value = F.sort; $('#fSort').hidden = lib; $('#viewSeg').hidden = lib;
+  [...$('#viewSeg').children].forEach(b => b.setAttribute('aria-pressed', b.dataset.v === meta.layout));
+  const halls = uniq(meta.halls.concat(vp.flatMap(p => p.halls)));
+  const hallCount = h => lib ? scenes.filter(s => { const p = projById(s.projectId); return lower(s.hall) === lower(h) || (p && p.halls.some(x => lower(x) === lower(h))); }).length
+    : vp.filter(p => p.halls.some(x => lower(x) === lower(h)) || scenesOf(p.id).some(s => lower(s.hall) === lower(h))).length;
+  $('#hallChips').innerHTML = '<span class="caps">Hall</span><button type="button" class="tchip" data-hall="" aria-pressed="' + !F.hall + '">All halls</button>' +
+    halls.map(h => '<button type="button" class="tchip" data-hall="' + esc(h) + '" aria-pressed="' + (lower(h) === lower(F.hall)) + '">' + esc(h) + '<span class="n">' + fmtNum(hallCount(h)) + '</span></button>').join('');
+  const tagCount = new Map();
+  vp.forEach(p => uniq(p.tags.concat(scenesOf(p.id).flatMap(s => s.tags))).forEach(t => { const k = lower(t); tagCount.set(k, {t, n:((tagCount.get(k) || {}).n || 0) + 1}); }));
+  const topTags = [...tagCount.values()].sort((a, b) => b.n - a.n).slice(0, 18);
+  $('#tagBar').hidden = !topTags.length;
+  $('#tagBar').innerHTML = '<span class="caps">Tags</span>' + topTags.map(x => '<button type="button" class="tchip" data-tag="' + esc(lower(x.t)) + '" aria-pressed="' + F.tags.has(lower(x.t)) + '">' + esc(x.t) + '</button>').join('');
+
+  $('#toursSec').hidden = lib; $('#libSec').hidden = !lib;
+  if (lib) renderLibrary(); else renderTours();
+}
+function renderTours(){
+  const ph = (F.q || F.tags.size) ? scenes.filter(sceneMatches).sort((a, b) => b.order - a.order) : [];
+  $('#photoRes').hidden = !ph.length;
+  $('#photoResN').textContent = ph.length > 12 ? 'Showing 12 of ' + fmtNum(ph.length) : fmtNum(ph.length) + (ph.length === 1 ? ' photo' : ' photos');
+  $('#photoGrid').innerHTML = ph.slice(0, 12).map(photoCard).join('');
+  const vp = visibleProjects(), edit = can('edit');
+  if (!vp.length){
+    $('#toursH').parentNode.hidden = true;
+    $('#tourList').innerHTML = edit ? '<div class="empty-dash card"><h2>Create your first tour</h2><p>Start a tour for a hall or an event, then add your Insta360 photos and link them with hotspots.</p>' +
+      '<button class="btn primary" type="button" data-new>New tour</button></div>'
+      : '<div class="empty-dash card"><h2>No tours to view yet</h2><p>Tours appear here once an editor has added photos to them.</p></div>';
+    return;
+  }
+  $('#toursH').parentNode.hidden = false;
+  const list = vp.filter(projectMatches);
+  const cmp = {
+    updated:(a, b) => b.updatedAt - a.updatedAt,
+    date:(a, b) => String(b.eventDate || '').localeCompare(String(a.eventDate || '')),
+    name:(a, b) => a.name.localeCompare(b.name),
+    photos:(a, b) => scenesOf(b.id).length - scenesOf(a.id).length
+  }[F.sort];
+  list.sort(cmp);
+  $('#toursH').textContent = filtering() ? 'Matching tours' : 'All tours';
+  $('#toursN').textContent = fmtNum(list.length) + (list.length === 1 ? ' tour' : ' tours');
+  if (!list.length){
+    $('#tourList').innerHTML = '<div class="nores">No tours match these filters.<br><button class="btn" type="button" data-clear>Clear filters</button></div>'; return;
+  }
+  if (meta.layout === 'table'){
+    $('#tourList').innerHTML = '<div class="tablewrap"><table class="dt"><thead><tr><th>Tour</th><th>Event</th><th>Halls</th><th>Event date</th><th class="r">Spaces</th><th class="r">Photos</th><th>Edited</th><th></th></tr></thead><tbody>' +
+      list.map(p => { const cv = coverOf(p), n = scenesOf(p.id).length;
+        return '<tr data-href="' + tourHref(p) + '"><td><div class="tn">' + (cv ? '<img src="' + cv.thumb + '" alt="" loading="lazy">' : '<span class="ph"></span>') + '<span>' + esc(p.name) + '</span></div></td>' +
+          '<td class="t2">' + esc(p.eventType || '–') + '</td><td class="t2">' + esc(p.halls.join(', ') || '–') + '</td><td class="t2">' + esc(fmtDate(p.eventDate) || '–') + '</td>' +
+          '<td class="r t2">' + fmtNum(spacesOf(p.id).length) + '</td><td class="r cur">' + fmtNum(n) + '</td><td class="t2">' + esc(fmtDate(p.updatedAt)) + (p.updatedBy ? ', ' + esc(p.updatedBy) : '') + '</td>' +
+          '<td><div class="acts">' + (n ? '<a class="btn sm" href="#/tour/' + p.id + '">View</a>' : '') + (edit ? '<a class="btn sm ghost" href="#/build/' + p.id + '">Builder</a>' : '') + '</div></td></tr>'; }).join('') +
+      '</tbody></table></div>';
+    return;
+  }
+  $('#tourList').innerHTML = '<div class="tour-grid">' + list.map(p => {
+    const cv = coverOf(p), n = scenesOf(p.id).length, sp = spacesOf(p.id).length;
+    return '<article class="tcard"><a class="tcover" href="' + tourHref(p) + '" aria-label="Open ' + esc(p.name) + '">' +
+      (cv ? '<img src="' + cv.thumb + '" alt="" loading="lazy" decoding="async">' : '<span class="ph">No photos yet</span>') + '</a>' +
+      '<div class="tbody"><h3 title="' + esc(p.name) + '">' + esc(p.name) + '</h3><div class="chiprow">' + eventBadge(p) + hallBadges(p) + '</div>' +
+      '<div class="tmeta"><span><b>' + fmtNum(n) + '</b> ' + (n === 1 ? 'photo' : 'photos') + '</span><span><b>' + fmtNum(sp) + '</b> ' + (sp === 1 ? 'space' : 'spaces') + '</span></div>' +
+      '<div class="tsub">' + esc([p.eventDate ? fmtDate(p.eventDate) : '', p.client].filter(Boolean).join(', ') || 'Edited ' + fmtDate(p.updatedAt)) + '</div>' +
+      '<div class="tactions">' + (n ? '<a class="btn sm" href="#/tour/' + p.id + '">View tour</a>' : '') + (edit ? '<a class="btn sm ghost" href="#/build/' + p.id + '">Open builder</a>' : '') + '</div></div></article>';
+  }).join('') + '</div>';
+}
+function renderLibrary(){
+  const list = scenes.filter(s => sceneVisible(s) && sceneMatches(s)).sort((a, b) => b.order - a.order);
+  $('#libH').textContent = filtering() ? 'Matching photos' : 'All photos';
+  $('#libN').textContent = fmtNum(list.length) + (list.length === 1 ? ' photo' : ' photos');
+  $('#libGrid').innerHTML = list.length ? list.slice(0, 300).map(photoCard).join('')
+    : (scenes.length ? '<div class="nores">No photos match these filters.<br><button class="btn" type="button" data-clear>Clear filters</button></div>'
+      : '<div class="nores">' + (can('edit') ? 'No 360° photos yet. Open a tour in the builder to add them.' : 'No 360° photos to view yet.') + '</div>');
+}
+$('#fQ').addEventListener('input', e => { F.q = lower(e.target.value); renderDash(); });
+$('#fEvent').addEventListener('change', e => { F.event = e.target.value; renderDash(); });
+$('#fSort').addEventListener('change', e => { F.sort = e.target.value; renderDash(); });
+$('#viewSeg').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; meta.layout = b.dataset.v; saveMeta(); renderDash(); });
+$('#hallChips').addEventListener('click', e => { const b = e.target.closest('.tchip'); if (!b) return; F.hall = b.dataset.hall; renderDash(); });
+$('#tagBar').addEventListener('click', e => { const b = e.target.closest('.tchip'); if (!b) return; const t = b.dataset.tag; F.tags.has(t) ? F.tags.delete(t) : F.tags.add(t); renderDash(); });
+$('#dmain').addEventListener('click', e => {
+  if (e.target.closest('[data-clear]')){ clearFilters(); return; }
+  if (e.target.closest('[data-new]')){ openTourModal(null); return; }
+  const pc = e.target.closest('.pcard'); if (pc){ location.hash = '#/tour/' + pc.dataset.p + '/' + pc.dataset.s; return; }
+  const tr = e.target.closest('tr[data-href]'); if (tr && !e.target.closest('a,button')) location.hash = tr.dataset.href;
+});
+$('#btnNew').addEventListener('click', () => { if (can('edit')) openTourModal(null); });
+
+/* ================= Tour modal ================= */
+let editingP = null, tmHallSel = [];
+const tmTags = makeTagInput($('#tmTags'));
+function drawTmHalls(){
+  const halls = uniq(meta.halls.concat(tmHallSel));
+  $('#tmHalls').innerHTML = halls.map(h => '<button type="button" class="tchip" data-h="' + esc(h) + '" aria-pressed="' + tmHallSel.some(x => lower(x) === lower(h)) + '">' + esc(h) + '</button>').join('');
+}
+$('#tmHalls').addEventListener('click', e => {
+  const b = e.target.closest('.tchip'); if (!b) return;
+  const h = b.dataset.h, i = tmHallSel.findIndex(x => lower(x) === lower(h));
+  if (i >= 0) tmHallSel.splice(i, 1); else tmHallSel.push(h);
+  drawTmHalls();
+});
+function openTourModal(p){
+  editingP = p;
+  refreshDatalists();
+  $('#tmTitle').textContent = p ? 'Tour details' : 'New tour';
+  $('#tmSave').textContent = p ? 'Save details' : 'Create tour';
+  $('#tmDelete').hidden = !p || !can('admin'); $('#tmDelete').textContent = 'Delete tour'; $('#tmDelete').classList.remove('armed'); tmDelArmed = false;
+  $('#tmName').value = p ? p.name : '';
+  tmHallSel = p ? p.halls.slice() : [];
+  drawTmHalls();
+  const evs = uniq(meta.eventTypes.concat(p && p.eventType ? [p.eventType] : []));
+  $('#tmEvent').innerHTML = '<option value="">Choose…</option>' + evs.map(v => '<option' + (p && lower(p.eventType) === lower(v) ? ' selected' : '') + '>' + esc(v) + '</option>').join('');
+  $('#tmDate').value = p ? p.eventDate || '' : '';
+  $('#tmClient').value = p ? p.client || '' : '';
+  tmTags.set(p ? p.tags : []);
+  $('#tourModal').hidden = false;
+  setTimeout(() => $('#tmName').focus(), 30);
+}
+function closeModals(){ $('#tourModal').hidden = true; $('#setModal').hidden = true; }
+$('#tmCancel').addEventListener('click', closeModals);
+$('#tourModal').addEventListener('click', e => { if (e.target.id === 'tourModal') closeModals(); });
+$('#tmSave').addEventListener('click', async () => {
+  const name = norm($('#tmName').value);
+  if (!name){ toast('Give the tour a name.', 'warn'); $('#tmName').focus(); return; }
+  const data = {name, halls:tmHallSel.slice(), eventType:$('#tmEvent').value, eventDate:$('#tmDate').value, client:norm($('#tmClient').value), tags:tmTags.get()};
+  if (editingP){
+    Object.assign(editingP, data); editingP.updatedAt = Date.now(); await saveProject(editingP);
+    closeModals(); toast('Tour details saved');
+    if (stageActive) renderStage(); else renderDash();
+  } else {
+    const p = normProject(Object.assign({id:uid(), createdBy:(me() || {}).name || '', updatedBy:(me() || {}).name || ''}, data));
+    projects.push(p); await saveProject(p);
+    closeModals();
+    location.hash = '#/build/' + p.id;
+  }
+});
+let tmDelArmed = false;
+$('#tmDelete').addEventListener('click', async () => {
+  const p = editingP; if (!p) return;
+  if (!tmDelArmed){ tmDelArmed = true; $('#tmDelete').textContent = 'Click again to delete tour and photos'; $('#tmDelete').classList.add('armed'); return; }
+  const list = scenesOf(p.id);
+  if (S.P === p){ clearViewer(); }
+  for (const s of list){ if (db){ try { await idb('scenes', 'readwrite', st => st.delete(s.id)); } catch(e){} } deleteTiles(s.id); }
+  scenes = scenes.filter(s => s.projectId !== p.id);
+  projects = projects.filter(x => x !== p);
+  if (db){ try { await idb('projects', 'readwrite', st => st.delete(p.id)); } catch(e){ saveFail(e); } }
+  closeModals(); toast('Tour deleted');
+  if (location.hash === '#/' || location.hash === '') route(); else location.hash = '#/';
+});
+
+/* ================= Settings ================= */
+let pendingLogo;
+function drawLogoPrev(){ $('#stLogoPrev').innerHTML = pendingLogo ? '<img src="' + pendingLogo + '" alt="Logo preview">' : 'No logo'; $('#stLogoDel').hidden = !pendingLogo; }
+$('#btnSettings').addEventListener('click', async () => {
+  if (!can('admin')) return;
+  draftUsers = meta.users.map(u => Object.assign({}, u, {newPin:''})); renderUserRows();
+  $('#stVenue').value = meta.venue;
+  pendingLogo = meta.logo; drawLogoPrev();
+  $('#stHalls').value = meta.halls.join('\n');
+  $('#stEvents').value = meta.eventTypes.join('\n');
+  $('#stQuality').value = meta.quality;
+  $('#stStorage').textContent = await storageText() + ' Everything is saved in this browser on this computer.';
+  $('#setModal').hidden = false;
+});
+$('#stLogoBtn').addEventListener('click', () => $('#stLogoFile').click());
+$('#stLogoFile').addEventListener('change', async e => {
+  const f = e.target.files[0]; e.target.value = ''; if (!f) return;
+  try {
+    const url = await new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = () => rej(r.error); r.readAsDataURL(f); });
+    const img = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = url; });
+    const h = 120, w = Math.max(1, Math.round((img.naturalWidth || 300) * h / (img.naturalHeight || 120)));
+    const c = document.createElement('canvas'); c.width = Math.min(w, 600); c.height = h;
+    c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+    pendingLogo = c.toDataURL('image/png'); drawLogoPrev();
+  } catch(err){ toast('That logo could not be read. Try a PNG or JPG.', 'err'); }
+});
+$('#stLogoDel').addEventListener('click', () => { pendingLogo = null; drawLogoPrev(); });
+$('#stCancel').addEventListener('click', closeModals);
+$('#setModal').addEventListener('click', e => { if (e.target.id === 'setModal') closeModals(); });
+$('#stSave').addEventListener('click', async () => {
+  if (!can('admin')) return;
+  const users = draftUsers.map(u => Object.assign({}, u, {name:norm(u.name)}));
+  if (users.some(u => !u.name)){ toast('Every user needs a name.', 'warn'); return; }
+  if (!users.some(u => u.role === 'admin')){ toast('Keep at least one admin, so someone can manage settings and users.', 'warn'); return; }
+  if (users.some(u => u.newPin && (u.newPin.length < 4 || u.newPin.length > 8))){ toast('PINs need 4 to 8 digits.', 'warn'); return; }
+  for (const u of users){ if (u.newPin) u.pinHash = await hashPin(u.id, u.newPin); }
+  meta.users = users.map(u => ({id:u.id, name:u.name, role:u.role, pinHash:u.pinHash || null}));
+  meta.venue = norm($('#stVenue').value) || 'Montage Event Complex';
+  meta.logo = pendingLogo || null;
+  const halls = uniq($('#stHalls').value.split('\n')); if (halls.length) meta.halls = halls;
+  const evs = uniq($('#stEvents').value.split('\n')); if (evs.length) meta.eventTypes = evs;
+  meta.quality = $('#stQuality').value;
+  await saveMeta(); closeModals(); toast('Settings saved');
+  if (!me()){ showLogin(); return; }
+  renderUserChip(); route();
+});
+
+/* ================= User management (admin) ================= */
+let draftUsers = [];
+const ICON_X = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+const ICON_LOCK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+const ICON_SWITCH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h11l-3-3M17 17H6l3 3"/></svg>';
+function renderUserRows(){
+  $('#stUsers').innerHTML = draftUsers.map((u, i) => '<div class="urow" data-i="' + i + '"><span class="avatar">' + esc(initials(u.name)) + '</span>' +
+    '<input class="input" data-f="name" value="' + esc(u.name) + '" placeholder="Name" maxlength="40" aria-label="Name">' +
+    '<select class="input" data-f="role" aria-label="Role">' + Object.keys(ROLES).map(r => '<option value="' + r + '"' + (u.role === r ? ' selected' : '') + '>' + ROLES[r] + '</option>').join('') + '</select>' +
+    '<input class="input" data-f="pin" type="password" inputmode="numeric" maxlength="8" autocomplete="new-password" placeholder="' + (u.pinHash ? 'PIN set' : 'No PIN') + '" aria-label="New PIN for ' + esc(u.name || 'user') + '" value="' + esc(u.newPin || '') + '">' +
+    (u.id === currentUserId ? '<span class="you" title="You">You</span>' : '<button type="button" class="btn sm ghost" data-act="del" aria-label="Remove ' + esc(u.name || 'user') + '">' + ICON_X + '</button>') + '</div>').join('');
+}
+$('#stUsers').addEventListener('input', e => {
+  const row = e.target.closest('.urow'); if (!row) return;
+  const u = draftUsers[+row.dataset.i], f = e.target.dataset.f;
+  if (f === 'name'){ u.name = e.target.value; row.querySelector('.avatar').textContent = initials(u.name); }
+  if (f === 'pin'){ const v = e.target.value.replace(/\D/g, ''); if (v !== e.target.value) e.target.value = v; u.newPin = v; }
+});
+$('#stUsers').addEventListener('change', e => { const row = e.target.closest('.urow'); if (row && e.target.dataset.f === 'role') draftUsers[+row.dataset.i].role = e.target.value; });
+$('#stUsers').addEventListener('click', e => { const b = e.target.closest('[data-act="del"]'); if (!b) return; draftUsers.splice(+b.closest('.urow').dataset.i, 1); renderUserRows(); });
+$('#stAddUser').addEventListener('click', () => {
+  draftUsers.push({id:uid(), name:'', role:'viewer', pinHash:null, newPin:''}); renderUserRows();
+  const inputs = $('#stUsers').querySelectorAll('input[data-f="name"]'); inputs[inputs.length - 1].focus();
+});
+
+/* ================= Sign in ================= */
+let loginSel = null;
+function renderUserChip(){
+  const u = me(); if (!u) return;
+  $('#uChip').innerHTML = '<span class="avatar">' + esc(initials(u.name)) + '</span><span class="who"><b>' + esc(u.name) + '</b><span class="caps">' + ROLES[u.role] + '</span></span>' + ICON_SWITCH;
+  $('#uChip').setAttribute('aria-label', 'Signed in as ' + u.name + ', ' + ROLES[u.role] + '. Switch user');
+}
+function userTile(u, lock){
+  return '<span class="avatar">' + esc(initials(u.name)) + '</span><span class="who"><b>' + esc(u.name) + '</b><span class="caps">' + ROLES[u.role] + '</span></span>' + (lock && u.pinHash ? ICON_LOCK : '');
+}
+function showLogin(){ loginSel = null; $('#login').hidden = false; closeModals(); renderLogin(); }
+function renderLogin(){
+  $('#loginBrand').innerHTML = meta.logo ? '<img src="' + meta.logo + '" alt="' + esc(meta.venue) + '">' : '<div class="brand-name">Montage</div><div class="caps brand-sub">360° tours</div>';
+  const sel = meta.users.find(u => u.id === loginSel);
+  $('#userGrid').hidden = !!sel; $('#pinArea').hidden = !sel;
+  $('#userGrid').innerHTML = meta.users.map(u => '<button type="button" class="utile" data-u="' + u.id + '">' + userTile(u, true) + '</button>').join('');
+  if (sel){ $('#pinUser').innerHTML = userTile(sel, false); $('#pinIn').value = ''; $('#pinErr').hidden = true; setTimeout(() => $('#pinIn').focus(), 30); }
+}
+function signIn(u){
+  storeUser(u.id); $('#login').hidden = true; renderUserChip();
+  if (location.hash.indexOf('#/build/') === 0 && !can('edit')) location.hash = location.hash.replace('#/build/', '#/tour/'); else route();
+}
+async function tryPin(){
+  const u = meta.users.find(x => x.id === loginSel); if (!u) return;
+  const h = await hashPin(u.id, $('#pinIn').value.trim());
+  if (h === u.pinHash) signIn(u); else { $('#pinErr').hidden = false; $('#pinIn').select(); }
+}
+$('#userGrid').addEventListener('click', e => {
+  const b = e.target.closest('.utile'); if (!b) return;
+  const u = meta.users.find(x => x.id === b.dataset.u); if (!u) return;
+  if (!u.pinHash) signIn(u); else { loginSel = u.id; renderLogin(); }
+});
+$('#pinGo').addEventListener('click', tryPin);
+$('#pinIn').addEventListener('keydown', e => { if (e.key === 'Enter') tryPin(); });
+$('#pinBack').addEventListener('click', () => { loginSel = null; renderLogin(); });
+$('#uChip').addEventListener('click', () => { storeUser(null); showLogin(); });
+
+/* ================= Router ================= */
+function openStage(p, mode, sid){
+  const sameP = S.P === p;
+  $('#dash').hidden = true; stageEl.hidden = false; stageActive = true;
+  if (!sameP){ clearViewer(); S.P = p; S.currentId = null; S.selHs = null; S.placing = false; S.space = null; tab = 'photos'; $('#upSpace').value = ''; }
+  S.mode = mode; S.placing = false; S.selHs = null;
+  if (!sameP) markViewed(p.id);
+  refreshDatalists(p.id);
+  requestAnimationFrame(resize);
+  const list = scenesOf(p.id);
+  const target = byId(sid) && byId(sid).projectId === p.id ? byId(sid) : (sameP && cur()) || byId(p.startId) || list[0];
+  if (target && (target.id !== S.currentId || !activeTS)) showScene(target.id, viewFor(target, 0));
+  else { renderStage(); setHash(); }
+}
+function openDashboard(view){
+  dashView = view === 'photos' ? 'photos' : 'tours';
+  stageActive = false; clearViewer(); hsLayer.innerHTML = ''; hsEls = []; clearFloorMeshes(); S.P = null; S.currentId = null; closeDrawer(); hideInfo();
+  stageEl.hidden = true; $('#dash').hidden = false;
+  renderDash(); $('#dmain').scrollTop = 0;
+}
+function route(){
+  if (!me()){ showLogin(); return; }
+  const parts = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean);
+  if (parts[0] === 'build' && !can('edit')){ location.replace('#/tour/' + parts.slice(1).join('/')); return; }
+  if ((parts[0] === 'tour' || parts[0] === 'build') && parts[1]){
+    const p = projById(parts[1]);
+    if (!p){ location.hash = '#/'; return; }
+    openStage(p, parts[0] === 'build' ? 'edit' : 'view', parts[2]);
+  } else openDashboard(parts[0]);
+}
+window.addEventListener('hashchange', route);
+
+/* ================= Loop & init ================= */
+function loop(t){
+  requestAnimationFrame(loop);
+  if (!stageActive) return;
+  if (anim) stepAnim(t);
+  updateCamera();
+  updateTiles(t);
+  positionHotspots();
+  renderer.render(scene3, camera);
+}
+async function init(){
+  try {
+    db = await openDB();
+    const [sc, pr, m, old] = await Promise.all([
+      idb('scenes', 'readonly', st => st.getAll()),
+      idb('projects', 'readonly', st => st.getAll()),
+      idb('meta', 'readonly', st => st.get('app')),
+      idb('meta', 'readonly', st => st.get('meta'))
+    ]);
+    if (m) Object.assign(meta, m, {hs:Object.assign({}, meta.hs, m.hs || {})});
+    else if (old && old.quality) meta.quality = old.quality;
+    try { if (!localStorage.getItem('m360-theme') && meta.theme && meta.theme !== 'system') applyTheme(meta.theme); } catch(err){ applyTheme(meta.theme); }
+    projects = (pr || []).map(normProject);
+    scenes = (sc || []).filter(s => s.levels && s.levels.length).map(normScene);
+    const orphans = scenes.filter(s => !s.projectId || !projById(s.projectId));
+    if (orphans.length){
+      const p = normProject({id:uid(), name:(old && old.tourName) || 'Imported tour', startId:(old && old.startId) || orphans[0].id});
+      projects.push(p);
+      orphans.forEach(s => { s.projectId = p.id; saveScene(s); });
+      await saveProject(p);
+      toast('Your earlier photos were moved into a tour called “' + p.name + '”.');
+    }
+  } catch(e){
+    db = null; console.warn(e);
+    toast('This browser is not saving data, so your tours only last while this page is open.', 'warn');
+  }
+  if (!meta.users || !meta.users.length){
+    const admin = {id:uid(), name:'Admin', role:'admin', pinHash:null};
+    meta.users = [admin]; saveMeta(); storeUser(admin.id);
+    setTimeout(() => toast('Signed in as Admin. Add your team and their roles in Settings.'), 400);
+  } else {
+    currentUserId = loadUserId();
+    if (!me() && meta.users.length === 1 && !meta.users[0].pinHash) storeUser(meta.users[0].id);
+  }
+  renderUserChip();
+  requestAnimationFrame(loop);
+  route();
+}
+init();
+})();
+</script>
+</body>
+</html>
